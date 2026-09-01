@@ -11,61 +11,102 @@ The **Infrastructure & Project Monitoring Division (IPMD)** of **MoSPI** monitor
 Originally monitored via the **Online Computerised Monitoring System (OCMS)** since 2006, the platform transitioned into **Project Assessment, Infrastructure Monitoring and Analytics for Nation-building (PAIMANA)**.
 
 This repository implements an **AI-powered decision-support system** that shifts project monitoring from *passive descriptive reporting* to *proactive predictive and prescriptive intelligence*:
-1. **Predicts** which infrastructure projects will experience cost overruns and schedule delays before they compound.
-2. **Explains root-cause drivers** via Pareto attribution (Land acquisition, Stage-II environmental clearances, contractor liquidity, geological surprises).
+1. **Predicts** which infrastructure projects will experience schedule delays before they compound.
+2. **Explains root-cause drivers** via SHAP feature attributions (e.g., schedule slip velocity, progress divergence).
 3. **Prescribes administrative interventions** for line ministries and cabinet committees.
 
 ---
 
-## 📊 Live Dataset: 486th Flash Report (April 2026)
+## 🚦 Current Status of the Project
 
-The system is built upon the official **486th Project Monitoring Report (Flash Report)** published on [`https://paimana-proj.mospi.gov.in/ReportPage`](https://paimana-proj.mospi.gov.in/ReportPage):
-* **Total Monitored Projects:** **1,981 Central Sector Projects** across **17 Line Ministries** and **22 Sectors**.
-* **Original Sanctioned Cost:** **₹37,12,662.01 Crore** (~₹37.13 Lakh Cr).
-* **Latest Anticipated Revised Cost:** **₹42,78,402.00 Crore** (~₹42.78 Lakh Cr).
-* **Net Cost Escalation:** **+₹5,65,739.99 Crore (+15.24%)**.
-* **Cumulative Expenditure:** **₹20,36,107.69 Crore (47.59% of revised outlay)**.
-* **Mega Projects (≥ ₹1,000 Cr):** **814 Projects** accounting for **₹31.63 Lakh Crore (85.2%)** of national capital allocation.
-* **Special Focus: North Eastern Region (NER):** **229 Ongoing Projects** across the 8 NER States (**₹3.39 Lakh Crore**).
+The project is currently in a **stable, fully integrated state** following a selective feature merge and repository recovery. The system successfully binds a rich React frontend with a robust Python/FastAPI backend, operating against a real historical database (4 months of MoSPI Flash Reports). 
+
+Recent milestones achieved:
+- 3-Stakeholder Role Architecture (Govt, Bidder, Citizen) has been fully implemented.
+- The PAI AI Copilot has been integrated with the Google Gemini API.
+- The ML prediction pipeline (XGBoost + SHAP) has been restored and wired to the React UI, delivering live, data-driven insights without relying on mock data.
 
 ---
 
-## 🌟 Core System Modules
+## 🌟 Core Features
 
-### 1. 🏛️ Executive Dashboard & Overview
-* National macro KPIs, 10-year decadal trajectory (2016 vs 2026), and Harmonized Master List (HML 2022) 6-Category sector breakdowns.
+### 1. 3-Role Gateway Architecture
+A centralized entry portal routing users to specialized dashboards based on their roles:
+- **Government Official Portal:** Executive oversight, AI risk radar, interventions, and GIS mapping.
+- **Company / Bidder Portal:** Live E-Tender discovery, bidding criteria analysis, and project awards tracking.
+- **Public Citizen Portal:** Transparency dashboards, civic feedback logging, and localized infrastructure impact mapping.
 
-### 2. 🗺️ National Infrastructure GIS Map
-* High-detail vector SVG map of India with accurate state boundaries, interactive choropleth density metrics (Project Count, Capital Outlay, Disbursals), and multi-state economic corridor overlays (*Mumbai-Ahmedabad Bullet Train, Western DFC, North East Gas Grid, Arunachal Frontier Highway*).
+### 2. 🔴 AI Early Warning Risk Radar
+- Real-time predictive risk scoring powered by an **XGBoost time-overrun model**.
+- **SHAP (SHapley Additive exPlanations)** integration to surface top positive and negative drivers influencing a project's risk.
+- Automated anomaly detection via **Isolation Forest** algorithms.
 
-### 3. 🔴 AI Early Warning Risk Radar
-* Real-time composite risk scoring (0–100) combining physical progress divergence, milestone velocity, and clearance friction.
-* Machine Learning cost escalation and completion date forecasting.
-* SHAP feature importance analysis quantifying CUF attributes (59.7%) vs external non-CUF variables (40.3%).
+### 3. 🤖 PAI AI Assistant (Gemini LLM Copilot)
+- Conversational intelligent assistant utilizing **Google's Gemini 2.5 Flash API**.
+- Capable of answering complex infrastructure queries, filtering live E-Tenders, and drafting executive cabinet briefs by synthesizing real-time database context.
 
-### 4. 📋 Projects Registry & S-Curve Dossiers
-* Searchable and filterable ledger of all 1,981 project lines with CSV export and planned vs actual progress S-Curve visualizer.
+### 4. 🗺️ National Infrastructure GIS Map
+- High-detail vector map of India highlighting regional infrastructure density.
+- Interactive choropleth metrics for project counts, capital outlay, and cumulative disbursals.
 
-### 5. 📊 Benchmarking & Root-Cause Analysis
-* Cross-ministry performance scorecards and Pareto root-cause decomposition of ₹5.65 Lakh Crore in cost escalations.
+### 5. 📋 Projects Registry & S-Curve Dossiers (Project X-Ray)
+- Searchable ledger of all 1,981 central sector projects.
+- "Project X-Ray" view detailing financial progress versus physical progress, schedule slippage, and AI-prescribed recommended actions.
 
-### 6. 🏔️ North Eastern Region Special Focus
-* Dedicated monitoring framework for the 229 central sector projects across Arunachal Pradesh, Assam, Manipur, Meghalaya, Mizoram, Nagaland, Sikkim, and Tripura.
+### 6. 🛠️ Intervention Centre
+- Closed-loop workflow allowing officials to create, track, and manage administrative interventions based on AI early warnings.
 
-### 7. 🧪 Common Upload Form (CUF) & What-If Sandbox
-* Project registration sandbox with interactive policy levers to test the impact of land handover acceleration and contractor liquidity releases.
+---
 
-### 8. 🤖 PAIMANA Drishti AI Assistant
-* LLM-enabled project intelligence assistant for conversational inquiry and automated drafting of Executive Cabinet Briefs.
+## 🏗️ System Architecture
+
+PAIMANA AI follows a decoupled Client-Server architecture designed for scalability, real-time inference, and modularity.
+
+1. **Presentation Layer (Frontend):** 
+   - A Single Page Application (SPA) built with React and Vite. It manages localized state and role-based routing natively.
+2. **Application Layer (Backend):** 
+   - A high-performance Python FastAPI server acting as the central intelligence hub. It handles REST API routing (`/api/projects`, `/api/intelligence`), CORS, and request validation.
+3. **Intelligence Layer (ML Engine):**
+   - Embedded within the backend, this pipeline extracts temporal features from historical snapshots (`temporal_features.py`), feeds them into pre-trained Joblib models (`time_overrun_model.joblib`), and calculates SHAP attributions in real-time (`prediction_service.py`).
+4. **Data Layer (Database):**
+   - SQLite database managed via SQLAlchemy ORM, housing thousands of historical Flash Report snapshots, project metadata, and intervention logs.
+
+---
+
+## 🔄 User Flow (Government Official)
+
+1. **Role Selection:** User arrives at the Landing Page and selects the "Government Official" role.
+2. **Command Centre:** User is directed to the Executive Dashboard containing macro KPIs and the AI Predictive Radar.
+3. **Prioritization:** The AI Risk Radar flags projects with a "HIGH" or "CRITICAL" risk of schedule deterioration.
+4. **Project X-Ray:** The user clicks on a flagged project and enters the detailed dossier. 
+5. **AI Early Warning Assessment:** The UI displays the precise XGBoost probability score and the SHAP Key Risk Drivers explaining *why* the project is delayed.
+6. **Action Execution:** Based on the AI's prescriptive recommendation, the official clicks "Create Intervention" to dispatch a formal taskforce directive.
 
 ---
 
 ## 🛠️ Technology Stack
 
-* **Frontend:** React 18, Vite, JavaScript (ES6+), Lucide React
-* **Styling:** Sovereign Government of India (MoSPI / NIC / National Portal of India) Design System
-* **Data Visualizations:** Custom SVG Geospatial Map of India, S-Curve Progress Trajectory Visualizers, Choropleth Density Scales
-* **AI / Analytics:** Statistical and Machine Learning inference models (`src/utils/aiEngine.js`)
+### Frontend
+- **Framework:** React 18
+- **Build Tool:** Vite
+- **Routing & State:** React Router / React Hooks
+- **Styling:** CSS3, Sovereign GoI Design System themes
+- **Icons:** Lucide React
+
+### Backend
+- **Framework:** FastAPI (Python 3.x)
+- **ASGI Server:** Uvicorn
+- **ORM:** SQLAlchemy
+- **Database:** SQLite (`paimana.db`)
+- **Data Processing:** Pandas, NumPy
+- **PDF Extraction:** PDFPlumber
+
+### Artificial Intelligence & Machine Learning
+- **Predictive Modeling:** XGBoost (`xgboost`)
+- **Model Interpretability:** SHAP (`shap` TreeExplainer)
+- **Anomaly Detection:** Scikit-Learn (`IsolationForest`)
+- **Large Language Model (LLM):** Google Gemini 2.5 Flash API (via REST Payload)
+- **Model Serialization:** Joblib
 
 ---
 
@@ -73,24 +114,33 @@ The system is built upon the official **486th Project Monitoring Report (Flash R
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/adityamchitimilla-pixel/<repo-name>.git
-cd <repo-name>
+git clone https://github.com/arnavpotale/sih.git
+cd PAIMANA-AI-SIH2026-main
 ```
 
-### 2. Install dependencies
+### 2. Frontend Setup
 ```bash
+# Install NPM dependencies
 npm install
-```
 
-### 3. Run the development server
-```bash
+# Run the React development server
 npm run dev
 ```
-Open [http://localhost:5173/](http://localhost:5173/) or [http://localhost:5174/](http://localhost:5174/) in your browser.
 
-### 4. Build for production
+### 3. Backend Setup
 ```bash
-npm run build
+# Navigate to the backend directory
+cd backend
+
+# Create and activate a Python virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install Python requirements
+pip install -r requirements.txt
+
+# Start the FastAPI server (Runs on http://localhost:8000)
+uvicorn app.main:app --reload
 ```
 
 ---

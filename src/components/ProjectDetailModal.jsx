@@ -8,7 +8,8 @@ import {
   Clock, 
   CheckCircle2,
   Activity,
-  Target
+  Target,
+  FileText
 } from 'lucide-react';
 
 export default function ProjectDetailModal({ project, onClose, isPublic = false }) {
@@ -213,36 +214,75 @@ export default function ProjectDetailModal({ project, onClose, isPublic = false 
 
           {/* HISTORY TAB */}
           {activeTab === 'history' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              <div style={{ padding: '1rem', background: '#ffffff', border: '1px solid var(--border-gov)', borderRadius: '4px' }}>
-                <h4 style={{ margin: '0 0 1rem 0', color: 'var(--gov-navy-dark)' }}>Historical Trends (April - July 2026)</h4>
-                {/* Simplified History View */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', background: '#f8fafc', padding: '10px', fontWeight: 700, fontSize: '0.8rem', color: '#475569' }}>
-                    <div>Month</div>
-                    <div>Physical Progress</div>
-                    <div>Financial Progress</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{
+                padding: '1rem',
+                background: '#ffffff',
+                border: '1px solid var(--border-gov)',
+                borderRadius: '4px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap' }}>
+                  <strong style={{ fontSize: '0.9rem', color: 'var(--gov-navy-dark)' }}>
+                    Physical vs Financial Progress S-Curve (Planned vs Actual)
+                  </strong>
+                  <div style={{ display: 'flex', gap: '10px', fontSize: '0.75rem' }}>
+                    <span style={{ color: '#64748b' }}>― Planned</span>
+                    <span style={{ color: '#003366', fontWeight: 700 }}>― Physical ({currentProgress}%)</span>
+                    <span style={{ color: '#b45309', fontWeight: 700 }}>― Financial ({financialProgress.toFixed(1)}%)</span>
+                    {predictionData && predictionData.time_status === 'MODEL_AVAILABLE' && predictionData.time_probability > 0.5 && (
+                      <span style={{ color: '#dc2626', fontWeight: 700 }}>-- High Risk Trajectory</span>
+                    )}
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '10px', fontSize: '0.85rem', borderBottom: '1px solid #e2e8f0' }}>
-                    <div>April 2026</div>
-                    <div>{Math.max(0, currentProgress - 3).toFixed(1)}%</div>
-                    <div>{Math.max(0, financialProgress - 2).toFixed(1)}%</div>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '10px', fontSize: '0.85rem', borderBottom: '1px solid #e2e8f0' }}>
-                    <div>May 2026</div>
-                    <div>{Math.max(0, currentProgress - 2).toFixed(1)}%</div>
-                    <div>{Math.max(0, financialProgress - 1).toFixed(1)}%</div>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '10px', fontSize: '0.85rem', borderBottom: '1px solid #e2e8f0' }}>
-                    <div>June 2026</div>
-                    <div>{Math.max(0, currentProgress - 1).toFixed(1)}%</div>
-                    <div>{Math.max(0, financialProgress - 0.5).toFixed(1)}%</div>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '10px', fontSize: '0.85rem' }}>
-                    <div>July 2026 (Current)</div>
-                    <div style={{ fontWeight: 700 }}>{currentProgress}%</div>
-                    <div style={{ fontWeight: 700 }}>{financialProgress.toFixed(1)}%</div>
-                  </div>
+                </div>
+
+                <div style={{ width: '100%', height: '200px' }}>
+                  <svg viewBox="0 0 700 180" style={{ width: '100%', height: '100%' }}>
+                    {/* Grid */}
+                    <line x1="50" y1="20" x2="680" y2="20" stroke="#e2e8f0" strokeDasharray="3 3" />
+                    <text x="25" y="24" fill="#64748b" fontSize="10">100%</text>
+
+                    <line x1="50" y1="65" x2="680" y2="65" stroke="#e2e8f0" strokeDasharray="3 3" />
+                    <text x="30" y="69" fill="#64748b" fontSize="10">75%</text>
+
+                    <line x1="50" y1="110" x2="680" y2="110" stroke="#e2e8f0" strokeDasharray="3 3" />
+                    <text x="30" y="114" fill="#64748b" fontSize="10">50%</text>
+
+                    <line x1="50" y1="155" x2="680" y2="155" stroke="#e2e8f0" strokeDasharray="3 3" />
+                    <text x="30" y="159" fill="#64748b" fontSize="10">25%</text>
+
+                    <line x1="50" y1="170" x2="680" y2="170" stroke="#94a3b8" />
+                    <text x="35" y="173" fill="#64748b" fontSize="10">0%</text>
+
+                    {/* Timeline labels */}
+                    <text x="50" y="180" fill="#64748b" fontSize="9">Sanction ({project.approvalDate})</text>
+                    <text x="380" y="180" fill="#003366" fontSize="9" fontWeight="700">Today (April 2026)</text>
+                    <text x="520" y="180" fill="#64748b" fontSize="9">Target ({project.originalTargetDoC})</text>
+                    
+                    {predictionData && predictionData.time_status === 'MODEL_AVAILABLE' && predictionData.time_probability > 0.5 && (
+                      <text x="630" y="180" fill="#dc2626" fontSize="9">Risk DoC</text>
+                    )}
+
+                    {/* Planned Curve */}
+                    <path d="M 50 170 C 200 160, 260 100, 520 20" fill="none" stroke="#94a3b8" strokeWidth="2" />
+
+                    {/* Financial Progress Curve */}
+                    <path d={`M 50 170 C 180 165, 280 ${170 - (financialProgress * 1.3)}, 380 ${170 - Math.min(150, financialProgress * 1.5)}`} fill="none" stroke="#b45309" strokeWidth="2.5" />
+
+                    {/* Physical Progress Curve */}
+                    <path d={`M 50 170 C 170 168, 260 ${170 - (currentProgress * 1.1)}, 380 ${170 - (currentProgress * 1.5)}`} fill="none" stroke="#003366" strokeWidth="3" />
+
+                    {/* Nodes */}
+                    <circle cx="380" cy={170 - (currentProgress * 1.5)} r="4" fill="#003366" />
+                    <circle cx="380" cy={170 - Math.min(150, financialProgress * 1.5)} r="4" fill="#b45309" />
+
+                    {/* AI Projected Extension (if risky) */}
+                    {predictionData && predictionData.time_status === 'MODEL_AVAILABLE' && predictionData.time_probability > 0.5 && (
+                      <>
+                        <path d={`M 380 ${170 - (currentProgress * 1.5)} C 480 ${170 - (currentProgress * 1.5) - 20}, 560 50, 640 20`} fill="none" stroke="#dc2626" strokeWidth="2" strokeDasharray="4 4" />
+                        <circle cx="640" cy="20" r="4" fill="#dc2626" />
+                      </>
+                    )}
+                  </svg>
                 </div>
               </div>
             </div>

@@ -1,0 +1,52 @@
+{
+  "time_model_type": "XGBoost",
+  "cost_model_type": "NOT_USEFUL",
+  "time_feature_list": [
+    "original_cost",
+    "revised_cost",
+    "expenditure",
+    "physical_progress",
+    "month_num",
+    "current_revised_cost",
+    "current_cost_escalation_amount",
+    "current_cost_escalation_percent",
+    "cumulative_expenditure",
+    "expenditure_ratio",
+    "project_age_days",
+    "planned_duration_days",
+    "schedule_slip_days",
+    "previous_expenditure",
+    "previous_revised_cost",
+    "previous_physical_progress",
+    "expenditure_delta",
+    "cost_revision_delta",
+    "physical_progress_delta",
+    "schedule_change_delta_days",
+    "time_delta_months",
+    "expenditure_velocity",
+    "cost_revision_velocity",
+    "physical_progress_velocity",
+    "schedule_slip_velocity",
+    "remaining_physical_progress",
+    "remaining_duration_days",
+    "cost_to_progress_ratio",
+    "expenditure_to_progress_ratio",
+    "previous_progress_velocity",
+    "progress_velocity_deceleration"
+  ],
+  "training_period": [
+    "April",
+    "May"
+  ],
+  "validation_period": [
+    "June"
+  ],
+  "target_definition": "Next observation deterioration",
+  "prediction_horizon": "1 Month Ahead",
+  "threshold": 0.5,
+  "class_balancing_strategy": "scale_pos_weight for XGB, balanced for RF/LR",
+  "training_timestamp": "2026-09-01T10:14:48.000Z",
+  "dataset_version": "1.0",
+  "model_version": "time_overrun_xgb_v1",
+  "known_limitations": "This model is experimental and trained using four monthly reporting periods. It must not be interpreted as production-grade generalization."
+}

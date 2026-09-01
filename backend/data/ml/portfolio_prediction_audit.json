@@ -1,0 +1,223 @@
+{
+  "total_projects": 1774,
+  "eligible_projects": 1774,
+  "ineligible_projects": 0,
+  "successful_predictions": 1774,
+  "failed_predictions": 0,
+  "insufficient_history_projects": 0,
+  "probability_stats": {
+    "min_probability": 0.001410089898854494,
+    "max_probability": 0.9503588080406189,
+    "mean_probability": 0.30487584211807667,
+    "median_probability": 0.23240996152162552,
+    "standard_deviation": 0.258760909481266
+  },
+  "risk_categories": {
+    "LOW": 1050,
+    "MODERATE": 306,
+    "HIGH": 231,
+    "CRITICAL": 187
+  },
+  "probability_distribution": {
+    "0.00-0.10": 479,
+    "0.10-0.20": 322,
+    "0.20-0.30": 249,
+    "0.30-0.40": 180,
+    "0.40-0.50": 126,
+    "0.50-0.60": 127,
+    "0.60-0.70": 104,
+    "0.70-0.80": 67,
+    "0.80-0.90": 65,
+    "0.90-1.00": 55
+  },
+  "representative_samples": [
+    {
+      "project_code": "400093",
+      "risk_category": "HIGH",
+      "probability": 0.5165315866470337,
+      "top_shap_drivers": {
+        "positive_drivers": [
+          {
+            "feature": "schedule_slip_days",
+            "label": "Schedule Slip",
+            "shap_value": 0.17601104080677032,
+            "direction": "increases_risk"
+          },
+          {
+            "feature": "expenditure_to_progress_ratio",
+            "label": "Expenditure/Progress Ratio",
+            "shap_value": 0.12243206053972244,
+            "direction": "increases_risk"
+          },
+          {
+            "feature": "expenditure_delta",
+            "label": "Expenditure Delta",
+            "shap_value": 0.10633327066898346,
+            "direction": "increases_risk"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "feature": "remaining_duration_days",
+            "label": "Remaining Duration",
+            "shap_value": -0.3467193841934204,
+            "direction": "decreases_risk"
+          },
+          {
+            "feature": "previous_revised_cost",
+            "label": "Previous Revised Cost",
+            "shap_value": -0.23032379150390625,
+            "direction": "decreases_risk"
+          },
+          {
+            "feature": "planned_duration_days",
+            "label": "Planned Duration",
+            "shap_value": -0.11671477556228638,
+            "direction": "decreases_risk"
+          }
+        ]
+      }
+    },
+    {
+      "project_code": "400095",
+      "risk_category": "CRITICAL",
+      "probability": 0.7248904705047607,
+      "top_shap_drivers": {
+        "positive_drivers": [
+          {
+            "feature": "remaining_duration_days",
+            "label": "Remaining Duration",
+            "shap_value": 0.7872365117073059,
+            "direction": "increases_risk"
+          },
+          {
+            "feature": "schedule_slip_days",
+            "label": "Schedule Slip",
+            "shap_value": 0.15469560027122498,
+            "direction": "increases_risk"
+          },
+          {
+            "feature": "expenditure_delta",
+            "label": "Expenditure Delta",
+            "shap_value": 0.1344202309846878,
+            "direction": "increases_risk"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "feature": "planned_duration_days",
+            "label": "Planned Duration",
+            "shap_value": -0.2557692527770996,
+            "direction": "decreases_risk"
+          },
+          {
+            "feature": "cost_to_progress_ratio",
+            "label": "Cost/Progress Ratio",
+            "shap_value": -0.20186035335063934,
+            "direction": "decreases_risk"
+          },
+          {
+            "feature": "current_cost_escalation_amount",
+            "label": "Cost Escalation Amount",
+            "shap_value": -0.05740782245993614,
+            "direction": "decreases_risk"
+          }
+        ]
+      }
+    },
+    {
+      "project_code": "400096",
+      "risk_category": "MODERATE",
+      "probability": 0.3512525260448456,
+      "top_shap_drivers": {
+        "positive_drivers": [
+          {
+            "feature": "schedule_slip_days",
+            "label": "Schedule Slip",
+            "shap_value": 0.35191747546195984,
+            "direction": "increases_risk"
+          },
+          {
+            "feature": "expenditure_delta",
+            "label": "Expenditure Delta",
+            "shap_value": 0.1771625578403473,
+            "direction": "increases_risk"
+          },
+          {
+            "feature": "project_age_days",
+            "label": "Project Age",
+            "shap_value": 0.0975349098443985,
+            "direction": "increases_risk"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "feature": "remaining_duration_days",
+            "label": "Remaining Duration",
+            "shap_value": -1.2780300378799438,
+            "direction": "decreases_risk"
+          },
+          {
+            "feature": "current_cost_escalation_amount",
+            "label": "Cost Escalation Amount",
+            "shap_value": -0.11363790184259415,
+            "direction": "decreases_risk"
+          },
+          {
+            "feature": "planned_duration_days",
+            "label": "Planned Duration",
+            "shap_value": -0.051184214651584625,
+            "direction": "decreases_risk"
+          }
+        ]
+      }
+    },
+    {
+      "project_code": "400105",
+      "risk_category": "LOW",
+      "probability": 0.15860529243946075,
+      "top_shap_drivers": {
+        "positive_drivers": [
+          {
+            "feature": "expenditure_delta",
+            "label": "Expenditure Delta",
+            "shap_value": 0.2247239649295807,
+            "direction": "increases_risk"
+          },
+          {
+            "feature": "schedule_slip_days",
+            "label": "Schedule Slip",
+            "shap_value": 0.15724942088127136,
+            "direction": "increases_risk"
+          },
+          {
+            "feature": "expenditure_to_progress_ratio",
+            "label": "Expenditure/Progress Ratio",
+            "shap_value": 0.12720005214214325,
+            "direction": "increases_risk"
+          }
+        ],
+        "negative_drivers": [
+          {
+            "feature": "remaining_duration_days",
+            "label": "Remaining Duration",
+            "shap_value": -0.9454081058502197,
+            "direction": "decreases_risk"
+          },
+          {
+            "feature": "planned_duration_days",
+            "label": "Planned Duration",
+            "shap_value": -0.6944171190261841,
+            "direction": "decreases_risk"
+          },
+          {
+            "feature": "current_cost_escalation_amount",
+            "label": "Cost Escalation Amount",
+            "shap_value": -0.16223683953285217,
+            "direction": "decreases_risk"
+          }
+        ]
+      }
+    }
+  ]
+}

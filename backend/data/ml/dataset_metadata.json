@@ -1,0 +1,39 @@
+{
+  "snapshots_processed": 6363,
+  "unique_projects": 1774,
+  "total_features_generated": 50,
+  "safe_features_count": 31,
+  "unsafe_features_count": 4,
+  "unsafe_features": [
+    "future_revised_cost",
+    "future_revised_end_dt",
+    "cost_target",
+    "time_target"
+  ],
+  "prediction_horizon": "Option A: Next-observation (1 month ahead)",
+  "cost_baseline_A": "Always predict 0 (no deterioration)",
+  "cost_baseline_B": "Predict 1 if current_cost_escalation_amount > 0",
+  "time_baseline_A": "Always predict 1 (delay)",
+  "time_baseline_B": "Predict 1 if schedule_slip_days > 0",
+  "temporal_split": {
+    "train": [
+      "April",
+      "May"
+    ],
+    "validation": [
+      "June"
+    ],
+    "test": "EXPERIMENTAL_VALIDATION_ONLY (Insufficient out-of-time data)"
+  },
+  "cost_dataset": {
+    "rows": 4589,
+    "positive_cases": 93,
+    "negative_cases": 4496
+  },
+  "time_dataset": {
+    "rows": 3727,
+    "positive_cases": 676,
+    "negative_cases": 3051
+  },
+  "creation_timestamp": "2026-09-01T04:35:14.148983"
+}

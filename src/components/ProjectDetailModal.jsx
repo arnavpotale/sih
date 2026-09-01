@@ -14,26 +14,33 @@ import {
 
 export default function ProjectDetailModal({ project, onClose, isPublic = false }) {
   const [predictionData, setPredictionData] = useState(null);
-  const [loadingPrediction, setLoadingPrediction] = useState(true);
+  const [historyData, setHistoryData] = useState([]);
+  const [loadingData, setLoadingData] = useState(true);
   
   // Tabs: overview, risk, history, interventions, documents
   const [activeTab, setActiveTab] = useState('overview'); 
 
   useEffect(() => {
     if (project && project.id && !isPublic) {
-      setLoadingPrediction(true);
-      fetch(`/api/intelligence/project/${project.id}/prediction`)
-        .then(res => res.json())
-        .then(data => {
-          setPredictionData(data);
-          setLoadingPrediction(false);
+      setLoadingData(true);
+      
+      const fetchPrediction = fetch(`/api/intelligence/project/${project.id}/prediction`).then(res => res.json());
+      const fetchHistory = fetch(`/api/intelligence/project/${project.id}/history`).then(res => res.json());
+      
+      Promise.all([fetchPrediction, fetchHistory])
+        .then(([pred, hist]) => {
+          setPredictionData(pred);
+          if (hist && hist.history) {
+            setHistoryData(hist.history);
+          }
+          setLoadingData(false);
         })
         .catch(err => {
-          console.error("Failed to fetch prediction", err);
-          setLoadingPrediction(false);
+          console.error("Failed to fetch project intelligence", err);
+          setLoadingData(false);
         });
     } else {
-      setLoadingPrediction(false);
+      setLoadingData(false);
     }
   }, [project, isPublic]);
 
@@ -48,7 +55,6 @@ export default function ProjectDetailModal({ project, onClose, isPublic = false 
   const currentProgress = parseFloat(project.physicalProgress) || 0;
   const financialProgress = project.originalCostCr > 0 ? (project.expenditureCr / project.originalCostCr) * 100 : 0;
 
-  // Determine which tabs to show based on public flag
   const tabs = isPublic 
     ? [{ id: 'overview', label: 'Overview' }, { id: 'history', label: 'History' }]
     : [
@@ -58,6 +64,46 @@ export default function ProjectDetailModal({ project, onClose, isPublic = false 
         { id: 'interventions', label: 'INTERVENTIONS' },
         { id: 'documents', label: 'DOCUMENTS' }
       ];
+
+  // Helper for dynamic S-curve coordinates
+  const getSCurvePoints = () => {
+    if (historyData.length === 0) return { physPoints: [], finPoints: [], labels: [] };
+    
+    // Distribute X-axis linearly from 100 to 450
+    const startX = 100;
+    const endX = 450;
+    const spanX = endX - startX;
+    
+    const count = historyData.length;
+    const stepX = count > 1 ? spanX / (count - 1) : 0;
+    
+    const physPoints = [];
+    const finPoints = [];
+    const labels = [];
+    
+    historyData.forEach((obs, idx) => {
+      const cx = startX + (stepX * idx);
+      // y-axis: 170 is 0%, 20 is 100%. 150 span.
+      // So y = 170 - (progress * 1.5)
+      
+      const pProg = obs.physical_progress || 0;
+      const cyPhys = 170 - (pProg * 1.5);
+      physPoints.push({ x: cx, y: cyPhys, val: pProg, month: obs.reporting_month });
+      
+      let fProg = 0;
+      if (obs.original_cost > 0) {
+        fProg = (obs.expenditure / obs.original_cost) * 100;
+      }
+      const cyFin = 170 - (fProg * 1.5);
+      finPoints.push({ x: cx, y: cyFin, val: fProg, month: obs.reporting_month });
+      
+      labels.push({ x: cx, month: `${obs.reporting_month} ${obs.reporting_year}` });
+    });
+    
+    return { physPoints, finPoints, labels };
+  };
+  
+  const { physPoints, finPoints, labels } = getSCurvePoints();
 
   return (
     <div style={{
@@ -146,9 +192,81 @@ export default function ProjectDetailModal({ project, onClose, isPublic = false 
                 </div>
               </div>
               
+              {/* S-CURVE VISUALIZATION */}
+              <div style={{ padding: '1rem', background: '#ffffff', border: '1px solid var(--border-gov)', borderRadius: '4px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap' }}>
+                  <div>
+                    <strong style={{ fontSize: '0.9rem', color: 'var(--gov-navy-dark)', display: 'block' }}>
+                      PROJECT PROGRESS — HISTORICAL S-CURVE
+                    </strong>
+                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Based on available monthly project reports</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px', fontSize: '0.75rem' }}>
+                    <span style={{ color: '#003366', fontWeight: 700 }}>― Physical Progress</span>
+                    <span style={{ color: '#b45309', fontWeight: 700 }}>― Financial Progress</span>
+                  </div>
+                </div>
+
+                {historyData.length > 0 ? (
+                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
+                    <svg viewBox="0 0 700 200" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+                      {/* Grid */}
+                      <line x1="50" y1="20" x2="680" y2="20" stroke="#e2e8f0" strokeDasharray="3 3" />
+                      <text x="25" y="24" fill="#64748b" fontSize="10">100%</text>
+
+                      <line x1="50" y1="65" x2="680" y2="65" stroke="#e2e8f0" strokeDasharray="3 3" />
+                      <text x="30" y="69" fill="#64748b" fontSize="10">75%</text>
+
+                      <line x1="50" y1="110" x2="680" y2="110" stroke="#e2e8f0" strokeDasharray="3 3" />
+                      <text x="30" y="114" fill="#64748b" fontSize="10">50%</text>
+
+                      <line x1="50" y1="155" x2="680" y2="155" stroke="#e2e8f0" strokeDasharray="3 3" />
+                      <text x="30" y="159" fill="#64748b" fontSize="10">25%</text>
+
+                      <line x1="50" y1="170" x2="680" y2="170" stroke="#94a3b8" />
+                      <text x="35" y="173" fill="#64748b" fontSize="10">0%</text>
+
+                      {/* X-Axis labels for actual data points */}
+                      {labels.map((lbl, idx) => (
+                        <text key={idx} x={lbl.x} y="190" fill="#475569" fontSize="9" textAnchor="middle" fontWeight={idx === labels.length - 1 ? "700" : "400"}>
+                          {lbl.month}
+                        </text>
+                      ))}
+
+                      {/* Line paths */}
+                      <path 
+                        d={`M ${physPoints.map(p => `${p.x} ${p.y}`).join(' L ')}`} 
+                        fill="none" stroke="#003366" strokeWidth="3" 
+                      />
+                      <path 
+                        d={`M ${finPoints.map(p => `${p.x} ${p.y}`).join(' L ')}`} 
+                        fill="none" stroke="#b45309" strokeWidth="2.5" 
+                      />
+
+                      {/* Hoverable Nodes */}
+                      {physPoints.map((p, idx) => (
+                        <circle key={`phys-${idx}`} cx={p.x} cy={p.y} r="5" fill="#003366">
+                          <title>{`${p.month}: Physical Progress ${p.val.toFixed(2)}%`}</title>
+                        </circle>
+                      ))}
+                      {finPoints.map((p, idx) => (
+                        <circle key={`fin-${idx}`} cx={p.x} cy={p.y} r="5" fill="#b45309">
+                          <title>{`${p.month}: Financial Progress ${p.val.toFixed(2)}%`}</title>
+                        </circle>
+                      ))}
+
+                    </svg>
+                  </div>
+                ) : (
+                  <div style={{ padding: '2rem', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
+                    Historical S-Curve data is currently unavailable for this project.
+                  </div>
+                )}
+              </div>
+
               {!isPublic && (
                 <div style={{ padding: '15px', background: '#fef3c7', border: '1px solid #fde68a', borderRadius: '4px' }}>
-                  <h4 style={{ margin: '0 0 8px 0', color: '#92400e' }}>Current Anomaly Status</h4>
+                  <h4 style={{ margin: '0 0 8px 0', color: '#92400e', fontSize: '0.85rem', textTransform: 'uppercase' }}>CURRENT PROJECT SIGNAL</h4>
                   <div style={{ fontSize: '0.9rem', color: '#b45309' }}>
                     No critical isolation forest anomalies detected in the latest reporting period. Structural data remains consistent.
                   </div>
@@ -165,7 +283,7 @@ export default function ProjectDetailModal({ project, onClose, isPublic = false 
                 <span><strong>Prediction Horizon:</strong> Next Reporting Period</span>
               </div>
 
-              {loadingPrediction ? (
+              {loadingData ? (
                 <div style={{ padding: '2rem', textAlign: 'center', color: '#64748b' }}>Loading AI prediction...</div>
               ) : predictionData && predictionData.time_status === 'MODEL_AVAILABLE' ? (
                 <>
@@ -214,76 +332,35 @@ export default function ProjectDetailModal({ project, onClose, isPublic = false 
 
           {/* HISTORY TAB */}
           {activeTab === 'history' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div style={{
-                padding: '1rem',
-                background: '#ffffff',
-                border: '1px solid var(--border-gov)',
-                borderRadius: '4px'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap' }}>
-                  <strong style={{ fontSize: '0.9rem', color: 'var(--gov-navy-dark)' }}>
-                    Physical vs Financial Progress S-Curve (Planned vs Actual)
-                  </strong>
-                  <div style={{ display: 'flex', gap: '10px', fontSize: '0.75rem' }}>
-                    <span style={{ color: '#64748b' }}>― Planned</span>
-                    <span style={{ color: '#003366', fontWeight: 700 }}>― Physical ({currentProgress}%)</span>
-                    <span style={{ color: '#b45309', fontWeight: 700 }}>― Financial ({financialProgress.toFixed(1)}%)</span>
-                    {predictionData && predictionData.time_status === 'MODEL_AVAILABLE' && predictionData.time_probability > 0.5 && (
-                      <span style={{ color: '#dc2626', fontWeight: 700 }}>-- High Risk Trajectory</span>
-                    )}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              <div style={{ padding: '1rem', background: '#ffffff', border: '1px solid var(--border-gov)', borderRadius: '4px' }}>
+                <h4 style={{ margin: '0 0 1rem 0', color: 'var(--gov-navy-dark)' }}>Historical Trends (Actual Data)</h4>
+                
+                {historyData.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.5fr 1.5fr 1fr', background: '#f8fafc', padding: '10px', fontWeight: 700, fontSize: '0.8rem', color: '#475569' }}>
+                      <div>Observation Month</div>
+                      <div>Physical Progress</div>
+                      <div>Financial Progress</div>
+                      <div>Status</div>
+                    </div>
+                    {historyData.map((obs, idx) => {
+                      const fProg = obs.original_cost > 0 ? (obs.expenditure / obs.original_cost) * 100 : 0;
+                      return (
+                        <div key={idx} style={{ display: 'grid', gridTemplateColumns: '2fr 1.5fr 1.5fr 1fr', padding: '10px', fontSize: '0.85rem', borderBottom: '1px solid #e2e8f0' }}>
+                          <div>{obs.reporting_month} {obs.reporting_year}</div>
+                          <div>{obs.physical_progress?.toFixed(2)}%</div>
+                          <div>{fProg.toFixed(2)}%</div>
+                          <div><CheckCircle2 size={14} color="#166534" /></div>
+                        </div>
+                      );
+                    })}
                   </div>
-                </div>
-
-                <div style={{ width: '100%', height: '200px' }}>
-                  <svg viewBox="0 0 700 180" style={{ width: '100%', height: '100%' }}>
-                    {/* Grid */}
-                    <line x1="50" y1="20" x2="680" y2="20" stroke="#e2e8f0" strokeDasharray="3 3" />
-                    <text x="25" y="24" fill="#64748b" fontSize="10">100%</text>
-
-                    <line x1="50" y1="65" x2="680" y2="65" stroke="#e2e8f0" strokeDasharray="3 3" />
-                    <text x="30" y="69" fill="#64748b" fontSize="10">75%</text>
-
-                    <line x1="50" y1="110" x2="680" y2="110" stroke="#e2e8f0" strokeDasharray="3 3" />
-                    <text x="30" y="114" fill="#64748b" fontSize="10">50%</text>
-
-                    <line x1="50" y1="155" x2="680" y2="155" stroke="#e2e8f0" strokeDasharray="3 3" />
-                    <text x="30" y="159" fill="#64748b" fontSize="10">25%</text>
-
-                    <line x1="50" y1="170" x2="680" y2="170" stroke="#94a3b8" />
-                    <text x="35" y="173" fill="#64748b" fontSize="10">0%</text>
-
-                    {/* Timeline labels */}
-                    <text x="50" y="180" fill="#64748b" fontSize="9">Sanction ({project.approvalDate})</text>
-                    <text x="380" y="180" fill="#003366" fontSize="9" fontWeight="700">Today (April 2026)</text>
-                    <text x="520" y="180" fill="#64748b" fontSize="9">Target ({project.originalTargetDoC})</text>
-                    
-                    {predictionData && predictionData.time_status === 'MODEL_AVAILABLE' && predictionData.time_probability > 0.5 && (
-                      <text x="630" y="180" fill="#dc2626" fontSize="9">Risk DoC</text>
-                    )}
-
-                    {/* Planned Curve */}
-                    <path d="M 50 170 C 200 160, 260 100, 520 20" fill="none" stroke="#94a3b8" strokeWidth="2" />
-
-                    {/* Financial Progress Curve */}
-                    <path d={`M 50 170 C 180 165, 280 ${170 - (financialProgress * 1.3)}, 380 ${170 - Math.min(150, financialProgress * 1.5)}`} fill="none" stroke="#b45309" strokeWidth="2.5" />
-
-                    {/* Physical Progress Curve */}
-                    <path d={`M 50 170 C 170 168, 260 ${170 - (currentProgress * 1.1)}, 380 ${170 - (currentProgress * 1.5)}`} fill="none" stroke="#003366" strokeWidth="3" />
-
-                    {/* Nodes */}
-                    <circle cx="380" cy={170 - (currentProgress * 1.5)} r="4" fill="#003366" />
-                    <circle cx="380" cy={170 - Math.min(150, financialProgress * 1.5)} r="4" fill="#b45309" />
-
-                    {/* AI Projected Extension (if risky) */}
-                    {predictionData && predictionData.time_status === 'MODEL_AVAILABLE' && predictionData.time_probability > 0.5 && (
-                      <>
-                        <path d={`M 380 ${170 - (currentProgress * 1.5)} C 480 ${170 - (currentProgress * 1.5) - 20}, 560 50, 640 20`} fill="none" stroke="#dc2626" strokeWidth="2" strokeDasharray="4 4" />
-                        <circle cx="640" cy="20" r="4" fill="#dc2626" />
-                      </>
-                    )}
-                  </svg>
-                </div>
+                ) : (
+                  <div style={{ padding: '2rem', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
+                    No historical records available.
+                  </div>
+                )}
               </div>
             </div>
           )}

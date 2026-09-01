@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.intelligence.prediction_service import prediction_service
-from app.intelligence.dataset_builder import get_latest_features
+from app.intelligence.dataset_builder import get_latest_features, get_project_history
 
 router = APIRouter(prefix="/api/intelligence", tags=["Intelligence"])
 
@@ -14,6 +14,13 @@ def get_prediction(project_code: str):
         
     result = prediction_service.get_prediction(project_code, features_dict)
     return result
+
+@router.get("/project/{project_code}/history")
+def get_history(project_code: str):
+    history = get_project_history(project_code)
+    if not history:
+        raise HTTPException(status_code=404, detail="Project history not found")
+    return {"project_code": project_code, "history": history}
 
 @router.get("/models/status")
 def get_model_status():

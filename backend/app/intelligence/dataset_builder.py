@@ -122,3 +122,38 @@ def get_all_latest_features() -> pd.DataFrame:
     # Sort and take the last observation per project
     latest_df = df.sort_values(['reporting_year', 'month_num']).groupby('project_code').tail(1)
     return latest_df
+
+def get_project_history(project_code: str) -> list:
+    """
+    Returns a chronologically sorted list of historical observations for a project.
+    """
+    df = load_snapshots()
+    if df.empty:
+        return []
+        
+    project_df = df[df['project_code'] == project_code].copy()
+    if len(project_df) == 0:
+        return []
+    
+    month_map = {
+        "January": 1, "February": 2, "March": 3, "April": 4,
+        "May": 5, "June": 6, "July": 7, "August": 8,
+        "September": 9, "October": 10, "November": 11, "December": 12
+    }
+    
+    project_df['month_num'] = project_df['reporting_month'].map(month_map)
+    project_df = project_df.sort_values(['reporting_year', 'month_num'])
+    
+    history = []
+    for _, row in project_df.iterrows():
+        history.append({
+            "reporting_month": row['reporting_month'],
+            "reporting_year": row['reporting_year'],
+            "physical_progress": float(row['physical_progress']) if pd.notnull(row['physical_progress']) else 0.0,
+            "expenditure": float(row['expenditure']) if pd.notnull(row['expenditure']) else 0.0,
+            "revised_cost": float(row['revised_cost']) if pd.notnull(row['revised_cost']) else 0.0,
+            "original_cost": float(row['original_cost']) if pd.notnull(row['original_cost']) else 0.0,
+            "revised_end_date": str(row['revised_end_date']) if pd.notnull(row['revised_end_date']) else None
+        })
+        
+    return history

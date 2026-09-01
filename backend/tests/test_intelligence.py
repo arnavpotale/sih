@@ -13,8 +13,8 @@ def test_model_status_endpoint():
     assert data["cost_model"]["status"] == "NOT_USEFUL"
 
 def test_valid_time_prediction():
-    # Use a known project in the db
-    response = client.get("/api/intelligence/project/400095/prediction")
+    # Use a known recurring project in the db (Mumbai-Ahmedabad High Speed Rail)
+    response = client.get("/api/intelligence/project/705728/prediction")
     assert response.status_code == 200
     data = response.json()
     assert data["time_status"] == "MODEL_AVAILABLE"

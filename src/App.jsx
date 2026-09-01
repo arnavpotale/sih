@@ -1,23 +1,32 @@
 import React, { useState, useEffect } from 'react';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import Navbar from './components/Navbar';
-import ExecutiveOverview from './components/ExecutiveOverview';
-import AIPredictionDashboard from './components/AIPredictionDashboard';
-import NationalInfrastructureMap from './components/NationalInfrastructureMap';
-import ProjectExplorer from './components/ProjectExplorer';
-import BenchmarkingAnalytics from './components/BenchmarkingAnalytics';
-import NorthEastFocus from './components/NorthEastFocus';
-import CUFSimulator from './components/CUFSimulator';
-import DrishtiAIAssistant from './components/DrishtiAIAssistant';
+import RoleSelectionGateway from './components/RoleSelectionGateway';
+import GovtOfficialLogin from './components/GovtOfficialLogin';
+import TenderBidderLogin from './components/TenderBidderLogin';
+import CitizenLogin from './components/CitizenLogin';
+import GovtOfficialPortal from './components/GovtOfficialPortal';
+import CompanyBidderPortal from './components/CompanyBidderPortal';
+import CitizenPortal from './components/CitizenPortal';
 import ProjectDetailModal from './components/ProjectDetailModal';
 import ReportGeneratorModal from './components/ReportGeneratorModal';
 import SearchModal from './components/SearchModal';
-import { Bot, ShieldCheck, FileText, ChevronUp, Globe } from 'lucide-react';
+import { INITIAL_CITIZEN_REPORTS } from './data/citizenFeedbackData';
 
-export default function App() {
-  const [activeTab, setActiveTab] = useState('overview');
+function MainAppContent() {
+  // Navigation & View Flow State: 'gateway' | 'login-govt' | 'login-tender' | 'login-citizen' | 'portal-govt' | 'portal-tender' | 'portal-citizen'
+  const [currentView, setCurrentView] = useState('gateway');
+  const [currentRole, setCurrentRole] = useState(null); // 'govt' | 'tender' | 'citizen'
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Dynamic Shared Citizen Grievances State (Connects Citizens <-> Govt Officials)
+  const [citizenReports, setCitizenReports] = useState(INITIAL_CITIZEN_REPORTS);
+
+  // Global Modals State
   const [selectedProject, setSelectedProject] = useState(null);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { t } = useLanguage();
 
   // Keyboard shortcut Ctrl+K / Cmd+K for Quick Search
   useEffect(() => {
@@ -31,12 +40,42 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Handlers for Role Gateway and Login Flow
+  const handleSelectRoleFromGateway = (roleId) => {
+    setCurrentRole(roleId);
+    if (roleId === 'govt') setCurrentView('login-govt');
+    else if (roleId === 'tender') setCurrentView('login-tender');
+    else if (roleId === 'citizen') setCurrentView('login-citizen');
+  };
+
+  const handleLoginSuccess = (userData) => {
+    setCurrentUser(userData);
+    if (userData.role === 'govt') setCurrentView('portal-govt');
+    else if (userData.role === 'tender') setCurrentView('portal-tender');
+    else if (userData.role === 'citizen') setCurrentView('portal-citizen');
+  };
+
+  const handleSwitchRoleOrLogout = () => {
+    setCurrentUser(null);
+    setCurrentRole(null);
+    setCurrentView('gateway');
+  };
+
+  const handleAddCitizenReport = (newReport) => {
+    setCitizenReports(prev => [newReport, ...prev]);
+  };
+
+  const handleUpdateReportStatus = (updatedReport) => {
+    setCitizenReports(prev => prev.map(r => r.id === updatedReport.id ? updatedReport : r));
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--bg-page)' }}>
       {/* Official Government Header & Navbar */}
       <Navbar 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
+        currentRole={currentRole}
+        currentUser={currentUser}
+        onSwitchRole={handleSwitchRoleOrLogout}
         onOpenReport={() => setIsReportOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
       />
@@ -49,81 +88,61 @@ export default function App() {
         margin: '0 auto',
         padding: '0 1.5rem 2.5rem 1.5rem'
       }}>
-        {activeTab === 'overview' && (
-          <ExecutiveOverview 
-            onSelectProject={(p) => setSelectedProject(p)} 
-            onNavigateToTab={(tab) => setActiveTab(tab)} 
+        {/* 1. GATEWAY: Role Selection Landing */}
+        {currentView === 'gateway' && (
+          <RoleSelectionGateway onSelectRole={handleSelectRoleFromGateway} />
+        )}
+
+        {/* 2. AUTHENTICATION PAGES */}
+        {currentView === 'login-govt' && (
+          <GovtOfficialLogin 
+            onLoginSuccess={handleLoginSuccess}
+            onBackToRoles={() => setCurrentView('gateway')}
           />
         )}
 
-        {activeTab === 'early-warning' && (
-          <AIPredictionDashboard 
-            onSelectProject={(p) => setSelectedProject(p)} 
+        {currentView === 'login-tender' && (
+          <TenderBidderLogin 
+            onLoginSuccess={handleLoginSuccess}
+            onBackToRoles={() => setCurrentView('gateway')}
           />
         )}
 
-        {activeTab === 'gis-map' && (
-          <NationalInfrastructureMap 
-            onSelectProject={(p) => setSelectedProject(p)} 
+        {currentView === 'login-citizen' && (
+          <CitizenLogin 
+            onLoginSuccess={handleLoginSuccess}
+            onBackToRoles={() => setCurrentView('gateway')}
           />
         )}
 
-        {activeTab === 'projects' && (
-          <ProjectExplorer 
-            onSelectProject={(p) => setSelectedProject(p)} 
+        {/* 3. DEDICATED ROLE PORTALS */}
+        {currentView === 'portal-govt' && currentUser && (
+          <GovtOfficialPortal 
+            govtUser={currentUser}
+            citizenReports={citizenReports}
+            onUpdateReportStatus={handleUpdateReportStatus}
+            onSelectProject={(p) => setSelectedProject(p)}
+            onOpenReport={() => setIsReportOpen(true)}
           />
         )}
 
-        {activeTab === 'benchmarking' && (
-          <BenchmarkingAnalytics />
-        )}
-
-        {activeTab === 'north-east' && (
-          <NorthEastFocus 
-            onSelectProject={(p) => setSelectedProject(p)} 
+        {currentView === 'portal-tender' && currentUser && (
+          <CompanyBidderPortal 
+            tenderUser={currentUser}
           />
         )}
 
-        {activeTab === 'cuf-simulator' && (
-          <CUFSimulator />
-        )}
-
-        {activeTab === 'assistant' && (
-          <DrishtiAIAssistant 
-            onSelectProject={(p) => setSelectedProject(p)} 
+        {currentView === 'portal-citizen' && currentUser && (
+          <CitizenPortal 
+            citizenUser={currentUser}
+            citizenReports={citizenReports}
+            onAddCitizenReport={handleAddCitizenReport}
+            onSelectProject={(p) => setSelectedProject(p)}
           />
         )}
       </main>
 
-      {/* Floating AI Assistant Trigger (when not on assistant tab) */}
-      {activeTab !== 'assistant' && (
-        <button
-          onClick={() => setActiveTab('assistant')}
-          style={{
-            position: 'fixed',
-            bottom: '24px',
-            right: '24px',
-            zIndex: 90,
-            background: 'var(--gov-navy)',
-            color: '#ffffff',
-            border: '2px solid #ff9933',
-            borderRadius: '4px',
-            padding: '10px 16px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            boxShadow: '0 4px 12px rgba(0, 34, 68, 0.4)',
-            cursor: 'pointer',
-            fontWeight: 700,
-            fontSize: '0.85rem'
-          }}
-        >
-          <Bot size={16} color="#ff9933" />
-          <span>Drishti AI Assistant</span>
-        </button>
-      )}
-
-      {/* Project Deep-Dive Modal */}
+      {/* Project Deep-Dive Modal (Project X-Ray with Real XGBoost & SHAP) */}
       {selectedProject && (
         <ProjectDetailModal 
           project={selectedProject} 
@@ -138,7 +157,7 @@ export default function App() {
         />
       )}
 
-      {/* Global Quick Search Modal */}
+      {/* Global Quick Search Modal (Ctrl+K) */}
       {isSearchOpen && (
         <SearchModal 
           onClose={() => setIsSearchOpen(false)} 
@@ -176,12 +195,11 @@ export default function App() {
             </div>
 
             <div>
-              <div style={{ fontWeight: 700, color: '#ffffff', marginBottom: '6px' }}>Technical Scope</div>
+              <div style={{ fontWeight: 700, color: '#ffffff', marginBottom: '6px' }}>System Personas & Roles</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: '#cbd5e1', fontSize: '0.75rem' }}>
-                <span>Problem Statement: <strong>SIH26103</strong></span>
-                <span>Theme: <strong>Smart Automation</strong></span>
-                <span>Category: <strong>Software</strong></span>
-                <span>Data Source: <strong>486th Flash Report (April 2026)</strong></span>
+                <span>🛡️ <strong>MoSPI Official:</strong> Portfolio Monitoring & AI EWS</span>
+                <span>🏗️ <strong>Tender Bidder / Agency:</strong> E-Procurement & Directives</span>
+                <span>👥 <strong>Public Citizen:</strong> Transparency & Civic Audit</span>
               </div>
             </div>
           </div>
@@ -207,5 +225,13 @@ export default function App() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <LanguageProvider>
+      <MainAppContent />
+    </LanguageProvider>
   );
 }

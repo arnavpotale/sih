@@ -1,13 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   DETAILED_PROJECTS 
 } from '../data/paimanaData';
-import { 
-  predictCostOverrun, 
-  predictTimeOverrun, 
-  calculateRiskScore,
-  getCUFAttributionData 
-} from '../utils/aiEngine';
 import { 
   AlertOctagon, 
   AlertTriangle, 
@@ -29,30 +23,46 @@ import {
 export default function AIPredictionDashboard({ onSelectProject }) {
   const [selectedRiskFilter, setSelectedRiskFilter] = useState('ALL');
   const [selectedProject, setSelectedProject] = useState(DETAILED_PROJECTS[0]);
+  const [portfolioIntel, setPortfolioIntel] = useState(null);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/intelligence/portfolio/summary')
+      .then(res => res.json())
+      .then(data => {
+        const intelMap = {};
+        if (data && data.portfolio_projects) {
+          data.portfolio_projects.forEach(p => {
+            intelMap[p.id] = p;
+          });
+        }
+        setPortfolioIntel(intelMap);
+      })
+      .catch(console.error);
+  }, []);
 
   // Compute live AI metrics for all projects
-  const enrichedProjects = DETAILED_PROJECTS.map(p => ({
-    ...p,
-    costPrediction: predictCostOverrun(p),
-    timePrediction: predictTimeOverrun(p),
-    riskAssessment: calculateRiskScore(p)
-  }));
+  const enrichedProjects = DETAILED_PROJECTS.map(p => {
+    const intel = portfolioIntel ? portfolioIntel[p.id] : null;
+    return {
+      ...p,
+      riskAssessment: {
+        riskLevel: intel ? (intel.risk_level === 'CRITICAL' ? 'Critical' : intel.risk_level === 'HIGH' ? 'High' : intel.risk_level === 'MEDIUM' ? 'Moderate' : 'Low') : 'Loading...',
+        score: intel ? intel.risk_score : 0,
+        warningCount: intel ? intel.warning_count : 0
+      }
+    };
+  });
 
   const filteredProjects = selectedRiskFilter === 'ALL'
     ? enrichedProjects
-    : enrichedProjects.filter(p => p.riskAssessment.riskLevel.toUpperCase() === selectedRiskFilter);
+    : enrichedProjects.filter(p => p.riskAssessment.riskLevel.toUpperCase() === selectedRiskFilter.toUpperCase());
 
   const criticalCount = enrichedProjects.filter(p => p.riskAssessment.riskLevel === 'Critical').length;
   const highCount = enrichedProjects.filter(p => p.riskAssessment.riskLevel === 'High').length;
   const moderateCount = enrichedProjects.filter(p => p.riskAssessment.riskLevel === 'Moderate').length;
   const lowCount = enrichedProjects.filter(p => p.riskAssessment.riskLevel === 'Low').length;
 
-  const cufAttribution = getCUFAttributionData();
-
-  // Active analyzed project calculations
-  const activeCostPred = predictCostOverrun(selectedProject);
-  const activeTimePred = predictTimeOverrun(selectedProject);
-  const activeRisk = calculateRiskScore(selectedProject);
+  const activeRisk = enrichedProjects.find(p => p.id === selectedProject.id)?.riskAssessment || { score: 0, riskLevel: 'Low', warningCount: 0 };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem 0' }}>
@@ -269,48 +279,38 @@ export default function AIPredictionDashboard({ onSelectProject }) {
               </button>
             </div>
 
-            {/* Prediction Models Grid */}
+            {/* Cost and Schedule Overview Grid */}
             <div style={{
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
               gap: '10px',
               padding: '1rem'
             }}>
-              {/* Cost Overrun Forecast */}
+              {/* Cost Status */}
               <div style={{ padding: '12px', background: '#f8fafc', border: '1px solid var(--border-gov)', borderRadius: '4px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
                   <TrendingUp size={16} color="var(--gov-navy)" />
-                  <strong style={{ fontSize: '0.85rem', color: 'var(--gov-navy-dark)' }}>Cost Overrun Forecast Model</strong>
+                  <strong style={{ fontSize: '0.85rem', color: 'var(--gov-navy-dark)' }}>Cost Overview</strong>
                 </div>
 
                 <div style={{ fontSize: '0.8rem', display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
                   <span style={{ color: '#475569' }}>Original Budget:</span>
-                  <strong>₹{activeCostPred.originalCostCr.toLocaleString()} Cr</strong>
+                  <strong>₹{selectedProject.originalCostCr.toLocaleString()} Cr</strong>
                 </div>
 
                 <div style={{ fontSize: '0.8rem', display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                   <span style={{ color: '#475569' }}>Current Official Revised:</span>
-                  <strong style={{ color: activeCostPred.currentRevisedCostCr > activeCostPred.originalCostCr ? '#dc2626' : 'inherit' }}>
-                    ₹{activeCostPred.currentRevisedCostCr.toLocaleString()} Cr
+                  <strong style={{ color: selectedProject.revisedCostCr > selectedProject.originalCostCr ? '#dc2626' : 'inherit' }}>
+                    ₹{selectedProject.revisedCostCr.toLocaleString()} Cr
                   </strong>
-                </div>
-
-                <div style={{ padding: '8px', background: '#e8f0fe', borderRadius: '4px', border: '1px solid #bfdbfe' }}>
-                  <div style={{ fontSize: '0.75rem', color: '#1e40af' }}>AI Forecasted Final Cost:</div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--gov-navy-dark)', fontFamily: 'var(--font-mono)' }}>
-                    ₹{activeCostPred.predictedFinalCostCr.toLocaleString()} Cr
-                  </div>
-                  <div style={{ fontSize: '0.7rem', color: '#b91c1c', fontWeight: 600 }}>
-                    Forecasted Escalation: +{activeCostPred.predictedEscalationPercent}%
-                  </div>
                 </div>
               </div>
 
-              {/* Schedule Slip Forecast */}
+              {/* Schedule Status */}
               <div style={{ padding: '12px', background: '#f8fafc', border: '1px solid var(--border-gov)', borderRadius: '4px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
                   <Clock size={16} color="#b45309" />
-                  <strong style={{ fontSize: '0.85rem', color: 'var(--gov-navy-dark)' }}>Schedule Delay Forecast Model</strong>
+                  <strong style={{ fontSize: '0.85rem', color: 'var(--gov-navy-dark)' }}>Schedule Overview</strong>
                 </div>
 
                 <div style={{ fontSize: '0.8rem', display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
@@ -323,16 +323,6 @@ export default function AIPredictionDashboard({ onSelectProject }) {
                   <strong style={{ color: selectedProject.delayMonths > 0 ? '#b45309' : 'inherit' }}>
                     {selectedProject.revisedDoC || 'On Target'}
                   </strong>
-                </div>
-
-                <div style={{ padding: '8px', background: '#fef3c7', borderRadius: '4px', border: '1px solid #fde68a' }}>
-                  <div style={{ fontSize: '0.75rem', color: '#92400e' }}>AI Projected Date of Completion:</div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#78350f', fontFamily: 'var(--font-mono)' }}>
-                    {activeTimePred.projectedDoC}
-                  </div>
-                  <div style={{ fontSize: '0.7rem', color: '#991b1b', fontWeight: 600 }}>
-                    Projected Total Delay: {activeTimePred.totalPredictedDelayMonths} Months
-                  </div>
                 </div>
               </div>
             </div>
@@ -351,58 +341,11 @@ export default function AIPredictionDashboard({ onSelectProject }) {
                 <p style={{ fontSize: '0.85rem', color: '#14532d', lineHeight: '1.4' }}>
                   {selectedProject.aiPrescription}
                 </p>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px', fontSize: '0.75rem', color: '#15803d' }}>
-                  <span>Escalation Protocol: <strong>{activeRisk.urgency}</strong></span>
-                  <span>Recommended Action: <strong>{activeRisk.recommendedAction}</strong></span>
-                </div>
               </div>
             </div>
           </div>
 
-          {/* CUF Feature Attribution Table */}
-          <div className="gov-card">
-            <div className="gov-card-header">
-              <span className="gov-card-title">
-                <BarChart size={15} color="var(--gov-navy)" /> CUF Fields vs External Factors Predictive Gain Analysis
-              </span>
-              <span className="gov-badge gov-badge-navy">Feature Importance</span>
-            </div>
-
-            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {cufAttribution.map(item => (
-                <div key={item.feature} style={{ fontSize: '0.8rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
-                    <span>
-                      <span style={{
-                        padding: '1px 5px',
-                        borderRadius: '2px',
-                        fontSize: '0.65rem',
-                        fontWeight: 700,
-                        background: item.isCUF ? '#e8f0fe' : '#fef3c7',
-                        color: item.isCUF ? '#1e40af' : '#92400e',
-                        marginRight: '6px',
-                        border: '1px solid #cbd5e1'
-                      }}>
-                        {item.isCUF ? 'CUF FIELD' : 'NON-CUF'}
-                      </span>
-                      <strong>{item.feature}</strong>
-                    </span>
-                    <strong style={{ color: item.isCUF ? 'var(--gov-navy)' : '#b45309' }}>{item.importancePct}%</strong>
-                  </div>
-
-                  <div className="gov-progress-track" style={{ height: '6px' }}>
-                    <div
-                      className="gov-progress-fill"
-                      style={{
-                        width: `${item.importancePct * 3.2}%`,
-                        background: item.isCUF ? 'var(--gov-navy)' : 'var(--gov-saffron)'
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* CUF Feature Attribution Table - REMOVED AS IT WAS FABRICATED */}
         </div>
       </div>
     </div>

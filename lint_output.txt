@@ -1,0 +1,1845 @@
+
+> sih2026@0.0.0 lint
+> oxlint
+
+
+  ! eslint(no-unused-vars): Identifier 'useEffect' is imported but never used.
+   ,-[src/context/LanguageContext.jsx:1:54]
+ 1 | import React, { createContext, useContext, useState, useEffect } from 'react';
+   :                                                      ^^^^|^^^^
+   :                                                          `-- 'useEffect' is imported here
+ 2 | import { LANGUAGES, TRANSLATIONS } from '../utils/translations';
+   `----
+  help: Consider removing this import.
+
+  ! react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+    ,-[src/context/LanguageContext.jsx:48:17]
+ 47 | 
+ 48 | export function useLanguage() {
+    :                 ^^^^^^^^^^^
+ 49 |   const context = useContext(LanguageContext);
+    `----
+
+  ! eslint(no-unused-vars): Identifier 'ClipboardList' is imported but never used.
+   ,-[src/components/ProjectInterventionsTab.jsx:2:10]
+ 1 | import React, { useState, useEffect } from 'react';
+ 2 | import { ClipboardList, Clock, CheckCircle2, ShieldAlert } from 'lucide-react';
+   :          ^^^^^^|^^^^^^
+   :                `-- 'ClipboardList' is imported here
+ 3 | import CreateInterventionForm from './CreateInterventionForm';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Parameter 'newIntervention' is declared but never used. Unused parameters should start with a '_'.
+    ,-[src/components/ProjectInterventionsTab.jsx:28:26]
+ 27 | 
+ 28 |   const handleSuccess = (newIntervention) => {
+    :                          ^^^^^^^|^^^^^^^
+    :                                 `-- 'newIntervention' is declared here
+ 29 |     setShowCreateForm(false);
+    `----
+  help: Consider removing this parameter.
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/components/ProjectInterventionsTab.jsx:25:5]
+ 23 | 
+ 24 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 25 |     fetchInterventions();
+    :     ^^^^^^^^^|^^^^^^^^
+    :              `-- Avoid calling setState() directly within an effect
+ 26 |   }, [project.id]);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'fetchInterventions'
+    ,-[src/components/ProjectInterventionsTab.jsx:26:6]
+ 24 |   useEffect(() => {
+ 25 |     fetchInterventions();
+    :     ^^^^^^^^^|^^^^^^^^
+    :              `-- useEffect uses `fetchInterventions` here
+ 26 |   }, [project.id]);
+    :      ^^^^^^^^^^^^
+ 27 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! eslint(no-unused-vars): Identifier 'CheckCircle2' is imported but never used.
+   ,-[src/components/CitizenLogin.jsx:8:3]
+ 7 |   CreditCard, 
+ 8 |   CheckCircle2, 
+   :   ^^^^^^|^^^^^
+   :         `-- 'CheckCircle2' is imported here
+ 9 |   Sparkles, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Sparkles' is imported but never used.
+    ,-[src/components/CitizenLogin.jsx:9:3]
+  8 |   CheckCircle2, 
+  9 |   Sparkles, 
+    :   ^^^^|^^^
+    :       `-- 'Sparkles' is imported here
+ 10 |   ShieldCheck
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ClipboardList' is imported but never used.
+   ,-[src/components/InterventionCentre.jsx:2:10]
+ 1 | import React, { useState, useEffect } from 'react';
+ 2 | import { ClipboardList, Clock, CheckCircle2, ShieldAlert, ArrowRight } from 'lucide-react';
+   :          ^^^^^^|^^^^^^
+   :                `-- 'ClipboardList' is imported here
+ 3 | import OfficialInterventionDetailModal from './OfficialInterventionDetailModal';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Clock' is imported but never used.
+   ,-[src/components/InterventionCentre.jsx:2:25]
+ 1 | import React, { useState, useEffect } from 'react';
+ 2 | import { ClipboardList, Clock, CheckCircle2, ShieldAlert, ArrowRight } from 'lucide-react';
+   :                         ^^|^^
+   :                           `-- 'Clock' is imported here
+ 3 | import OfficialInterventionDetailModal from './OfficialInterventionDetailModal';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'CheckCircle2' is imported but never used.
+   ,-[src/components/InterventionCentre.jsx:2:32]
+ 1 | import React, { useState, useEffect } from 'react';
+ 2 | import { ClipboardList, Clock, CheckCircle2, ShieldAlert, ArrowRight } from 'lucide-react';
+   :                                ^^^^^^|^^^^^
+   :                                      `-- 'CheckCircle2' is imported here
+ 3 | import OfficialInterventionDetailModal from './OfficialInterventionDetailModal';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Parameter 'onSelectProject' is declared but never used. Unused parameters should start with a '_'.
+   ,-[src/components/InterventionCentre.jsx:5:46]
+ 4 | 
+ 5 | export default function InterventionCentre({ onSelectProject }) {
+   :                                              ^^^^^^^|^^^^^^^
+   :                                                     `-- 'onSelectProject' is declared here
+ 6 |   const [interventions, setInterventions] = useState([]);
+   `----
+  help: Consider removing this parameter.
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/components/InterventionCentre.jsx:26:5]
+ 24 | 
+ 25 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 26 |     fetchInterventions();
+    :     ^^^^^^^^^|^^^^^^^^
+    :              `-- Avoid calling setState() directly within an effect
+ 27 |   }, []);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! eslint(no-unused-vars): Variable 't' is declared but never used. Unused variables should start with a '_'.
+    ,-[src/App.jsx:29:11]
+ 28 |   const [isSearchOpen, setIsSearchOpen] = useState(false);
+ 29 |   const { t } = useLanguage();
+    :           |
+    :           `-- 't' is declared here
+ 30 | 
+    `----
+  help: Consider removing this declaration.
+
+  ! eslint(no-unused-vars): Identifier 'CheckCircle2' is imported but never used.
+    ,-[src/components/GovtOfficialLogin.jsx:9:3]
+  8 |   Key, 
+  9 |   CheckCircle2, 
+    :   ^^^^^^|^^^^^
+    :         `-- 'CheckCircle2' is imported here
+ 10 |   Sparkles,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AlertCircle' is imported but never used.
+    ,-[src/components/GovtOfficialLogin.jsx:11:3]
+ 10 |   Sparkles,
+ 11 |   AlertCircle
+    :   ^^^^^|^^^^^
+    :        `-- 'AlertCircle' is imported here
+ 12 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'FileText' is imported but never used.
+   ,-[src/components/TenderBidderLogin.jsx:6:3]
+ 5 |   Building, 
+ 6 |   FileText, 
+   :   ^^^^|^^^
+   :       `-- 'FileText' is imported here
+ 7 |   Mail, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'KeyRound' is imported but never used.
+   ,-[src/components/TenderBidderLogin.jsx:8:3]
+ 7 |   Mail, 
+ 8 |   KeyRound, 
+   :   ^^^^|^^^
+   :       `-- 'KeyRound' is imported here
+ 9 |   Sparkles, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'CheckCircle2' is imported but never used.
+    ,-[src/components/TenderBidderLogin.jsx:10:3]
+  9 |   Sparkles, 
+ 10 |   CheckCircle2, 
+    :   ^^^^^^|^^^^^
+    :         `-- 'CheckCircle2' is imported here
+ 11 |   ShieldAlert
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ShieldAlert' is imported but never used.
+    ,-[src/components/TenderBidderLogin.jsx:11:3]
+ 10 |   CheckCircle2, 
+ 11 |   ShieldAlert
+    :   ^^^^^|^^^^^
+    :        `-- 'ShieldAlert' is imported here
+ 12 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Layers' is imported but never used.
+   ,-[src/components/SearchModal.jsx:3:21]
+ 2 | import { DETAILED_PROJECTS } from '../data/paimanaData';
+ 3 | import { Search, X, Layers, MapPin, Building2, ArrowRight } from 'lucide-react';
+   :                     ^^^|^^
+   :                        `-- 'Layers' is imported here
+ 4 | 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'MapPin' is imported but never used.
+   ,-[src/components/SearchModal.jsx:3:29]
+ 2 | import { DETAILED_PROJECTS } from '../data/paimanaData';
+ 3 | import { Search, X, Layers, MapPin, Building2, ArrowRight } from 'lucide-react';
+   :                             ^^^|^^
+   :                                `-- 'MapPin' is imported here
+ 4 | 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Building2' is imported but never used.
+   ,-[src/components/SearchModal.jsx:3:37]
+ 2 | import { DETAILED_PROJECTS } from '../data/paimanaData';
+ 3 | import { Search, X, Layers, MapPin, Building2, ArrowRight } from 'lucide-react';
+   :                                     ^^^^|^^^^
+   :                                         `-- 'Building2' is imported here
+ 4 | 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Variable 'setAssignedTo' is declared but never used. Unused variables should start with a '_'.
+   ,-[src/components/CreateInterventionForm.jsx:7:22]
+ 6 |   const [priority, setPriority] = useState(risk.riskLevel === 'Critical' ? 'CRITICAL' : 'HIGH');
+ 7 |   const [assignedTo, setAssignedTo] = useState('Project Manager');
+   :                      ^^^^^^|^^^^^^
+   :                            `-- 'setAssignedTo' is declared here
+ 8 |   const [dueDate, setDueDate] = useState('');
+   `----
+  help: Consider removing this declaration.
+
+  ! eslint(no-unused-vars): Identifier 'PAIMANA_SUMMARY' is imported but never used.
+   ,-[src/components/ReportGeneratorModal.jsx:3:3]
+ 2 | import { 
+ 3 |   PAIMANA_SUMMARY, 
+   :   ^^^^^^^|^^^^^^^
+   :          `-- 'PAIMANA_SUMMARY' is imported here
+ 4 |   HML_CATEGORIES, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'MINISTRIES_DATA' is imported but never used.
+   ,-[src/components/ReportGeneratorModal.jsx:5:3]
+ 4 |   HML_CATEGORIES, 
+ 5 |   MINISTRIES_DATA, 
+   :   ^^^^^^^|^^^^^^^
+   :          `-- 'MINISTRIES_DATA' is imported here
+ 6 |   NORTH_EAST_SUMMARY,
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'NORTH_EAST_SUMMARY' is imported but never used.
+   ,-[src/components/ReportGeneratorModal.jsx:6:3]
+ 5 |   MINISTRIES_DATA, 
+ 6 |   NORTH_EAST_SUMMARY,
+   :   ^^^^^^^^^|^^^^^^^^
+   :            `-- 'NORTH_EAST_SUMMARY' is imported here
+ 7 |   DETAILED_PROJECTS,
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ESCALATION_DRIVERS' is imported but never used.
+   ,-[src/components/ReportGeneratorModal.jsx:8:3]
+ 7 |   DETAILED_PROJECTS,
+ 8 |   ESCALATION_DRIVERS 
+   :   ^^^^^^^^^|^^^^^^^^
+   :            `-- 'ESCALATION_DRIVERS' is imported here
+ 9 | } from '../data/paimanaData';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Download' is imported but never used.
+    ,-[src/components/ReportGeneratorModal.jsx:13:3]
+ 12 |   Printer, 
+ 13 |   Download, 
+    :   ^^^^|^^^
+    :       `-- 'Download' is imported here
+ 14 |   FileText, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'FileText' is imported but never used.
+    ,-[src/components/ReportGeneratorModal.jsx:14:3]
+ 13 |   Download, 
+ 14 |   FileText, 
+    :   ^^^^|^^^
+    :       `-- 'FileText' is imported here
+ 15 |   Building, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Building' is imported but never used.
+    ,-[src/components/ReportGeneratorModal.jsx:15:3]
+ 14 |   FileText, 
+ 15 |   Building, 
+    :   ^^^^|^^^
+    :       `-- 'Building' is imported here
+ 16 |   TrendingUp, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'TrendingUp' is imported but never used.
+    ,-[src/components/ReportGeneratorModal.jsx:16:3]
+ 15 |   Building, 
+ 16 |   TrendingUp, 
+    :   ^^^^^|^^^^
+    :        `-- 'TrendingUp' is imported here
+ 17 |   AlertTriangle,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AlertTriangle' is imported but never used.
+    ,-[src/components/ReportGeneratorModal.jsx:17:3]
+ 16 |   TrendingUp, 
+ 17 |   AlertTriangle,
+    :   ^^^^^^|^^^^^^
+    :         `-- 'AlertTriangle' is imported here
+ 18 |   Calendar,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Calendar' is imported but never used.
+    ,-[src/components/ReportGeneratorModal.jsx:18:3]
+ 17 |   AlertTriangle,
+ 18 |   Calendar,
+    :   ^^^^|^^^
+    :       `-- 'Calendar' is imported here
+ 19 |   Layers,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Layers' is imported but never used.
+    ,-[src/components/ReportGeneratorModal.jsx:19:3]
+ 18 |   Calendar,
+ 19 |   Layers,
+    :   ^^^|^^
+    :      `-- 'Layers' is imported here
+ 20 |   CheckCircle2
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'CheckCircle2' is imported but never used.
+    ,-[src/components/ReportGeneratorModal.jsx:20:3]
+ 19 |   Layers,
+ 20 |   CheckCircle2
+    :   ^^^^^^|^^^^^
+    :         `-- 'CheckCircle2' is imported here
+ 21 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Variable 'reportScope' is declared but never used. Unused variables should start with a '_'.
+    ,-[src/components/ReportGeneratorModal.jsx:24:10]
+ 23 | export default function ReportGeneratorModal({ onClose }) {
+ 24 |   const [reportScope, setReportScope] = useState('full'); // 'full', 'critical', 'northeast'
+    :          ^^^^^|^^^^^
+    :               `-- 'reportScope' is declared here
+ 25 | 
+    `----
+  help: Consider removing this declaration.
+
+  ! eslint(no-unused-vars): Variable 'setReportScope' is declared but never used. Unused variables should start with a '_'.
+    ,-[src/components/ReportGeneratorModal.jsx:24:23]
+ 23 | export default function ReportGeneratorModal({ onClose }) {
+ 24 |   const [reportScope, setReportScope] = useState('full'); // 'full', 'critical', 'northeast'
+    :                       ^^^^^^^|^^^^^^
+    :                              `-- 'setReportScope' is declared here
+ 25 | 
+    `----
+  help: Consider removing this declaration.
+
+  ! eslint(no-unused-vars): Identifier 'MINISTRIES_DATA' is imported but never used.
+   ,-[src/components/ExecutiveOverview.jsx:5:3]
+ 4 |   HML_CATEGORIES, 
+ 5 |   MINISTRIES_DATA,
+   :   ^^^^^^^|^^^^^^^
+   :          `-- 'MINISTRIES_DATA' is imported here
+ 6 |   COMPLETED_PROJECTS_RECENT,
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'COMPLETED_PROJECTS_RECENT' is imported but never used.
+   ,-[src/components/ExecutiveOverview.jsx:6:3]
+ 5 |   MINISTRIES_DATA,
+ 6 |   COMPLETED_PROJECTS_RECENT,
+   :   ^^^^^^^^^^^^|^^^^^^^^^^^^
+   :               `-- 'COMPLETED_PROJECTS_RECENT' is imported here
+ 7 |   NEWLY_ADDED_HIGHLIGHTS,
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'NEWLY_ADDED_HIGHLIGHTS' is imported but never used.
+   ,-[src/components/ExecutiveOverview.jsx:7:3]
+ 6 |   COMPLETED_PROJECTS_RECENT,
+ 7 |   NEWLY_ADDED_HIGHLIGHTS,
+   :   ^^^^^^^^^^^|^^^^^^^^^^
+   :              `-- 'NEWLY_ADDED_HIGHLIGHTS' is imported here
+ 8 |   DETAILED_PROJECTS
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AlertTriangle' is imported but never used.
+    ,-[src/components/ExecutiveOverview.jsx:12:3]
+ 11 |   TrendingUp, 
+ 12 |   AlertTriangle, 
+    :   ^^^^^^|^^^^^^
+    :         `-- 'AlertTriangle' is imported here
+ 13 |   CheckCircle2, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'CheckCircle2' is imported but never used.
+    ,-[src/components/ExecutiveOverview.jsx:13:3]
+ 12 |   AlertTriangle, 
+ 13 |   CheckCircle2, 
+    :   ^^^^^^|^^^^^
+    :         `-- 'CheckCircle2' is imported here
+ 14 |   PlusCircle, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'PlusCircle' is imported but never used.
+    ,-[src/components/ExecutiveOverview.jsx:14:3]
+ 13 |   CheckCircle2, 
+ 14 |   PlusCircle, 
+    :   ^^^^^|^^^^
+    :        `-- 'PlusCircle' is imported here
+ 15 |   Building, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ArrowRight' is imported but never used.
+    ,-[src/components/ExecutiveOverview.jsx:21:3]
+ 20 |   Pickaxe,
+ 21 |   ArrowRight,
+    :   ^^^^^|^^^^
+    :        `-- 'ArrowRight' is imported here
+ 22 |   ShieldAlert,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'FileText' is imported but never used.
+    ,-[src/components/ExecutiveOverview.jsx:23:3]
+ 22 |   ShieldAlert,
+ 23 |   FileText,
+    :   ^^^^|^^^
+    :       `-- 'FileText' is imported here
+ 24 |   Building2,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Variable 'getHmlIcon' is declared but never used. Unused variables should start with a '_'.
+    ,-[src/components/ExecutiveOverview.jsx:32:9]
+ 31 | 
+ 32 |   const getHmlIcon = (catNum) => {
+    :         ^^^^^|^^^^
+    :              `-- 'getHmlIcon' is declared here
+ 33 |     switch (catNum) {
+    `----
+  help: Consider removing this declaration.
+
+  ! eslint(no-unused-vars): Identifier 'Filter' is imported but never used.
+    ,-[src/components/ProjectExplorer.jsx:10:3]
+  9 |   Search, 
+ 10 |   Filter, 
+    :   ^^^|^^
+    :      `-- 'Filter' is imported here
+ 11 |   ArrowUpDown, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ArrowUpDown' is imported but never used.
+    ,-[src/components/ProjectExplorer.jsx:11:3]
+ 10 |   Filter, 
+ 11 |   ArrowUpDown, 
+    :   ^^^^^|^^^^^
+    :        `-- 'ArrowUpDown' is imported here
+ 12 |   Building, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Building' is imported but never used.
+    ,-[src/components/ProjectExplorer.jsx:12:3]
+ 11 |   ArrowUpDown, 
+ 12 |   Building, 
+    :   ^^^^|^^^
+    :       `-- 'Building' is imported here
+ 13 |   MapPin, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'MapPin' is imported but never used.
+    ,-[src/components/ProjectExplorer.jsx:13:3]
+ 12 |   Building, 
+ 13 |   MapPin, 
+    :   ^^^|^^
+    :      `-- 'MapPin' is imported here
+ 14 |   Calendar, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Calendar' is imported but never used.
+    ,-[src/components/ProjectExplorer.jsx:14:3]
+ 13 |   MapPin, 
+ 14 |   Calendar, 
+    :   ^^^^|^^^
+    :       `-- 'Calendar' is imported here
+ 15 |   CheckCircle, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'CheckCircle' is imported but never used.
+    ,-[src/components/ProjectExplorer.jsx:15:3]
+ 14 |   Calendar, 
+ 15 |   CheckCircle, 
+    :   ^^^^^|^^^^^
+    :        `-- 'CheckCircle' is imported here
+ 16 |   AlertCircle, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AlertCircle' is imported but never used.
+    ,-[src/components/ProjectExplorer.jsx:16:3]
+ 15 |   CheckCircle, 
+ 16 |   AlertCircle, 
+    :   ^^^^^|^^^^^
+    :        `-- 'AlertCircle' is imported here
+ 17 |   SlidersHorizontal,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'SlidersHorizontal' is imported but never used.
+    ,-[src/components/ProjectExplorer.jsx:17:3]
+ 16 |   AlertCircle, 
+ 17 |   SlidersHorizontal,
+    :   ^^^^^^^^|^^^^^^^^
+    :           `-- 'SlidersHorizontal' is imported here
+ 18 |   ChevronLeft,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Eye' is imported but never used.
+    ,-[src/components/ProjectExplorer.jsx:21:3]
+ 20 |   Download,
+ 21 |   Eye,
+    :   ^|^
+    :    `-- 'Eye' is imported here
+ 22 |   Layers
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Layers' is imported but never used.
+    ,-[src/components/ProjectExplorer.jsx:22:3]
+ 21 |   Eye,
+ 22 |   Layers
+    :   ^^^|^^
+    :      `-- 'Layers' is imported here
+ 23 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'CheckCircle2' is imported but never used.
+    ,-[src/components/AIPredictionDashboard.jsx:14:3]
+ 13 |   AlertTriangle, 
+ 14 |   CheckCircle2, 
+    :   ^^^^^^|^^^^^
+    :         `-- 'CheckCircle2' is imported here
+ 15 |   Activity, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Activity' is imported but never used.
+    ,-[src/components/AIPredictionDashboard.jsx:15:3]
+ 14 |   CheckCircle2, 
+ 15 |   Activity, 
+    :   ^^^^|^^^
+    :       `-- 'Activity' is imported here
+ 16 |   Zap, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Zap' is imported but never used.
+    ,-[src/components/AIPredictionDashboard.jsx:16:3]
+ 15 |   Activity, 
+ 16 |   Zap, 
+    :   ^|^
+    :    `-- 'Zap' is imported here
+ 17 |   Cpu, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Cpu' is imported but never used.
+    ,-[src/components/AIPredictionDashboard.jsx:17:3]
+ 16 |   Zap, 
+ 17 |   Cpu, 
+    :   ^|^
+    :    `-- 'Cpu' is imported here
+ 18 |   TrendingUp, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ArrowRight' is imported but never used.
+    ,-[src/components/AIPredictionDashboard.jsx:20:3]
+ 19 |   Clock, 
+ 20 |   ArrowRight,
+    :   ^^^^^|^^^^
+    :        `-- 'ArrowRight' is imported here
+ 21 |   ShieldAlert,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ShieldAlert' is imported but never used.
+    ,-[src/components/AIPredictionDashboard.jsx:21:3]
+ 20 |   ArrowRight,
+ 21 |   ShieldAlert,
+    :   ^^^^^|^^^^^
+    :        `-- 'ShieldAlert' is imported here
+ 22 |   FileCheck2,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'FileCheck2' is imported but never used.
+    ,-[src/components/AIPredictionDashboard.jsx:22:3]
+ 21 |   ShieldAlert,
+ 22 |   FileCheck2,
+    :   ^^^^^|^^^^
+    :        `-- 'FileCheck2' is imported here
+ 23 |   Filter,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Filter' is imported but never used.
+    ,-[src/components/AIPredictionDashboard.jsx:23:3]
+ 22 |   FileCheck2,
+ 23 |   Filter,
+    :   ^^^|^^
+    :      `-- 'Filter' is imported here
+ 24 |   BarChart,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Info' is imported but never used.
+    ,-[src/components/AIPredictionDashboard.jsx:26:3]
+ 25 |   Lightbulb,
+ 26 |   Info
+    :   ^^|^
+    :     `-- 'Info' is imported here
+ 27 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'DETAILED_PROJECTS' is imported but never used.
+   ,-[src/components/DrishtiAIAssistant.jsx:3:3]
+ 2 | import { 
+ 3 |   DETAILED_PROJECTS, 
+   :   ^^^^^^^^|^^^^^^^^
+   :           `-- 'DETAILED_PROJECTS' is imported here
+ 4 |   PAIMANA_SUMMARY, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'PAIMANA_SUMMARY' is imported but never used.
+   ,-[src/components/DrishtiAIAssistant.jsx:4:3]
+ 3 |   DETAILED_PROJECTS, 
+ 4 |   PAIMANA_SUMMARY, 
+   :   ^^^^^^^|^^^^^^^
+   :          `-- 'PAIMANA_SUMMARY' is imported here
+ 5 |   ESCALATION_DRIVERS, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ESCALATION_DRIVERS' is imported but never used.
+   ,-[src/components/DrishtiAIAssistant.jsx:5:3]
+ 4 |   PAIMANA_SUMMARY, 
+ 5 |   ESCALATION_DRIVERS, 
+   :   ^^^^^^^^^|^^^^^^^^
+   :            `-- 'ESCALATION_DRIVERS' is imported here
+ 6 |   NORTH_EAST_SUMMARY 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'NORTH_EAST_SUMMARY' is imported but never used.
+   ,-[src/components/DrishtiAIAssistant.jsx:6:3]
+ 5 |   ESCALATION_DRIVERS, 
+ 6 |   NORTH_EAST_SUMMARY 
+   :   ^^^^^^^^^|^^^^^^^^
+   :            `-- 'NORTH_EAST_SUMMARY' is imported here
+ 7 | } from '../data/paimanaData';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Sparkles' is imported but never used.
+    ,-[src/components/DrishtiAIAssistant.jsx:11:3]
+ 10 |   Send, 
+ 11 |   Sparkles, 
+    :   ^^^^|^^^
+    :       `-- 'Sparkles' is imported here
+ 12 |   User, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'User' is imported but never used.
+    ,-[src/components/DrishtiAIAssistant.jsx:12:3]
+ 11 |   Sparkles, 
+ 12 |   User, 
+    :   ^^|^
+    :     `-- 'User' is imported here
+ 13 |   Copy, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Layers' is imported but never used.
+    ,-[src/components/DrishtiAIAssistant.jsx:15:3]
+ 14 |   Check, 
+ 15 |   Layers, 
+    :   ^^^|^^
+    :      `-- 'Layers' is imported here
+ 16 |   ArrowRight,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ArrowRight' is imported but never used.
+    ,-[src/components/DrishtiAIAssistant.jsx:16:3]
+ 15 |   Layers, 
+ 16 |   ArrowRight,
+    :   ^^^^^|^^^^
+    :        `-- 'ArrowRight' is imported here
+ 17 |   Zap,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Zap' is imported but never used.
+    ,-[src/components/DrishtiAIAssistant.jsx:17:3]
+ 16 |   ArrowRight,
+ 17 |   Zap,
+    :   ^|^
+    :    `-- 'Zap' is imported here
+ 18 |   FileText,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'FileText' is imported but never used.
+    ,-[src/components/DrishtiAIAssistant.jsx:18:3]
+ 17 |   Zap,
+ 18 |   FileText,
+    :   ^^^^|^^^
+    :       `-- 'FileText' is imported here
+ 19 |   Building2
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Building2' is imported but never used.
+    ,-[src/components/DrishtiAIAssistant.jsx:19:3]
+ 18 |   FileText,
+ 19 |   Building2
+    :   ^^^^|^^^^
+    :       `-- 'Building2' is imported here
+ 20 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Parameter 'onSelectProject' is declared but never used. Unused parameters should start with a '_'.
+    ,-[src/components/DrishtiAIAssistant.jsx:22:46]
+ 21 | 
+ 22 | export default function DrishtiAIAssistant({ onSelectProject }) {
+    :                                              ^^^^^^^|^^^^^^^
+    :                                                     `-- 'onSelectProject' is declared here
+ 23 |   const [messages, setMessages] = useState([
+    `----
+  help: Consider removing this parameter.
+
+  ! react(purity): Cannot call impure function during render
+    ,-[src/components/DrishtiAIAssistant.jsx:63:11]
+ 62 |     const userMessage = {
+ 63 |       id: Date.now().toString(),
+    :           ^^^^^|^^^^
+    :                `-- Cannot call impure function
+ 64 |       sender: 'user',
+    `----
+  help: `Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component re-renders
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/purity
+
+  ! eslint(no-unused-vars): Identifier 'HML_CATEGORIES' is imported but never used.
+   ,-[src/components/BenchmarkingAnalytics.jsx:6:3]
+ 5 |   ESCALATION_DRIVERS,
+ 6 |   HML_CATEGORIES 
+   :   ^^^^^^^|^^^^^^
+   :          `-- 'HML_CATEGORIES' is imported here
+ 7 | } from '../data/paimanaData';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'BarChart3' is imported but never used.
+    ,-[src/components/BenchmarkingAnalytics.jsx:9:3]
+  8 | import { 
+  9 |   BarChart3, 
+    :   ^^^^|^^^^
+    :       `-- 'BarChart3' is imported here
+ 10 |   PieChart, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'PieChart' is imported but never used.
+    ,-[src/components/BenchmarkingAnalytics.jsx:10:3]
+  9 |   BarChart3, 
+ 10 |   PieChart, 
+    :   ^^^^|^^^
+    :       `-- 'PieChart' is imported here
+ 11 |   Layers, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Layers' is imported but never used.
+    ,-[src/components/BenchmarkingAnalytics.jsx:11:3]
+ 10 |   PieChart, 
+ 11 |   Layers, 
+    :   ^^^|^^
+    :      `-- 'Layers' is imported here
+ 12 |   TrendingUp, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'TrendingUp' is imported but never used.
+    ,-[src/components/BenchmarkingAnalytics.jsx:12:3]
+ 11 |   Layers, 
+ 12 |   TrendingUp, 
+    :   ^^^^^|^^^^
+    :        `-- 'TrendingUp' is imported here
+ 13 |   AlertTriangle, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'CheckCircle' is imported but never used.
+    ,-[src/components/BenchmarkingAnalytics.jsx:14:3]
+ 13 |   AlertTriangle, 
+ 14 |   CheckCircle, 
+    :   ^^^^^|^^^^^
+    :        `-- 'CheckCircle' is imported here
+ 15 |   MapPin, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Info' is imported but never used.
+    ,-[src/components/BenchmarkingAnalytics.jsx:17:3]
+ 16 |   Building2,
+ 17 |   Info
+    :   ^^|^
+    :     `-- 'Info' is imported here
+ 18 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Building2' is imported but never used.
+   ,-[src/components/RoleSelectionGateway.jsx:8:3]
+ 7 |   Sparkles, 
+ 8 |   Building2, 
+   :   ^^^^|^^^^
+   :       `-- 'Building2' is imported here
+ 9 |   Activity, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Activity' is imported but never used.
+    ,-[src/components/RoleSelectionGateway.jsx:9:3]
+  8 |   Building2, 
+  9 |   Activity, 
+    :   ^^^^|^^^
+    :       `-- 'Activity' is imported here
+ 10 |   FileCheck2, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'FileCheck2' is imported but never used.
+    ,-[src/components/RoleSelectionGateway.jsx:10:3]
+  9 |   Activity, 
+ 10 |   FileCheck2, 
+    :   ^^^^^|^^^^
+    :        `-- 'FileCheck2' is imported here
+ 11 |   Eye, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Eye' is imported but never used.
+    ,-[src/components/RoleSelectionGateway.jsx:11:3]
+ 10 |   FileCheck2, 
+ 11 |   Eye, 
+    :   ^|^
+    :    `-- 'Eye' is imported here
+ 12 |   Compass,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Compass' is imported but never used.
+    ,-[src/components/RoleSelectionGateway.jsx:12:3]
+ 11 |   Eye, 
+ 12 |   Compass,
+    :   ^^^|^^^
+    :      `-- 'Compass' is imported here
+ 13 |   CheckCircle2
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Sparkles' is imported but never used.
+    ,-[src/components/GovtOfficialPortal.jsx:13:3]
+ 12 |   ShieldCheck, 
+ 13 |   Sparkles
+    :   ^^^^|^^^
+    :       `-- 'Sparkles' is imported here
+ 14 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ShieldCheck' is imported but never used.
+   ,-[src/components/CitizenFeedbackReview.jsx:3:3]
+ 2 | import { 
+ 3 |   ShieldCheck, 
+   :   ^^^^^|^^^^^
+   :        `-- 'ShieldCheck' is imported here
+ 4 |   MessageSquare, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AlertTriangle' is imported but never used.
+   ,-[src/components/CitizenFeedbackReview.jsx:5:3]
+ 4 |   MessageSquare, 
+ 5 |   AlertTriangle, 
+   :   ^^^^^^|^^^^^^
+   :         `-- 'AlertTriangle' is imported here
+ 6 |   CheckCircle2, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'CheckCircle2' is imported but never used.
+   ,-[src/components/CitizenFeedbackReview.jsx:6:3]
+ 5 |   AlertTriangle, 
+ 6 |   CheckCircle2, 
+   :   ^^^^^^|^^^^^
+   :         `-- 'CheckCircle2' is imported here
+ 7 |   Clock, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Clock' is imported but never used.
+   ,-[src/components/CitizenFeedbackReview.jsx:7:3]
+ 6 |   CheckCircle2, 
+ 7 |   Clock, 
+   :   ^^|^^
+   :     `-- 'Clock' is imported here
+ 8 |   MapPin, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'MapPin' is imported but never used.
+   ,-[src/components/CitizenFeedbackReview.jsx:8:3]
+ 7 |   Clock, 
+ 8 |   MapPin, 
+   :   ^^^|^^
+   :      `-- 'MapPin' is imported here
+ 9 |   Building2, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Building2' is imported but never used.
+    ,-[src/components/CitizenFeedbackReview.jsx:9:3]
+  8 |   MapPin, 
+  9 |   Building2, 
+    :   ^^^^|^^^^
+    :       `-- 'Building2' is imported here
+ 10 |   Send, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Send' is imported but never used.
+    ,-[src/components/CitizenFeedbackReview.jsx:10:3]
+  9 |   Building2, 
+ 10 |   Send, 
+    :   ^^|^
+    :     `-- 'Send' is imported here
+ 11 |   ExternalLink,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ExternalLink' is imported but never used.
+    ,-[src/components/CitizenFeedbackReview.jsx:11:3]
+ 10 |   Send, 
+ 11 |   ExternalLink,
+    :   ^^^^^^|^^^^^
+    :         `-- 'ExternalLink' is imported here
+ 12 |   Filter,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Filter' is imported but never used.
+    ,-[src/components/CitizenFeedbackReview.jsx:12:3]
+ 11 |   ExternalLink,
+ 12 |   Filter,
+    :   ^^^|^^
+    :      `-- 'Filter' is imported here
+ 13 |   UserCheck
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'UserCheck' is imported but never used.
+    ,-[src/components/CitizenFeedbackReview.jsx:13:3]
+ 12 |   Filter,
+ 13 |   UserCheck
+    :   ^^^^|^^^^
+    :       `-- 'UserCheck' is imported here
+ 14 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Parameter 'onSelectProject' is declared but never used. Unused parameters should start with a '_'.
+    ,-[src/components/CitizenFeedbackReview.jsx:19:3]
+ 18 |   onUpdateReportStatus, 
+ 19 |   onSelectProject 
+    :   ^^^^^^^|^^^^^^^
+    :          `-- 'onSelectProject' is declared here
+ 20 | }) {
+    `----
+  help: Consider removing this parameter.
+
+  ! eslint(no-unused-vars): Identifier 'MapPin' is imported but never used.
+   ,-[src/components/NorthEastFocus.jsx:7:3]
+ 6 | import { 
+ 7 |   MapPin, 
+   :   ^^^|^^
+   :      `-- 'MapPin' is imported here
+ 8 |   Mountain, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Building' is imported but never used.
+    ,-[src/components/NorthEastFocus.jsx:9:3]
+  8 |   Mountain, 
+  9 |   Building, 
+    :   ^^^^|^^^
+    :       `-- 'Building' is imported here
+ 10 |   TrendingUp, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'TrendingUp' is imported but never used.
+    ,-[src/components/NorthEastFocus.jsx:10:3]
+  9 |   Building, 
+ 10 |   TrendingUp, 
+    :   ^^^^^|^^^^
+    :        `-- 'TrendingUp' is imported here
+ 11 |   AlertTriangle, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AlertTriangle' is imported but never used.
+    ,-[src/components/NorthEastFocus.jsx:11:3]
+ 10 |   TrendingUp, 
+ 11 |   AlertTriangle, 
+    :   ^^^^^^|^^^^^^
+    :         `-- 'AlertTriangle' is imported here
+ 12 |   ShieldAlert, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ShieldAlert' is imported but never used.
+    ,-[src/components/NorthEastFocus.jsx:12:3]
+ 11 |   AlertTriangle, 
+ 12 |   ShieldAlert, 
+    :   ^^^^^|^^^^^
+    :        `-- 'ShieldAlert' is imported here
+ 13 |   Layers,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Layers' is imported but never used.
+    ,-[src/components/NorthEastFocus.jsx:13:3]
+ 12 |   ShieldAlert, 
+ 13 |   Layers,
+    :   ^^^|^^
+    :      `-- 'Layers' is imported here
+ 14 |   ArrowRight,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ArrowRight' is imported but never used.
+    ,-[src/components/NorthEastFocus.jsx:14:3]
+ 13 |   Layers,
+ 14 |   ArrowRight,
+    :   ^^^^^|^^^^
+    :        `-- 'ArrowRight' is imported here
+ 15 |   Eye,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Eye' is imported but never used.
+    ,-[src/components/NorthEastFocus.jsx:15:3]
+ 14 |   ArrowRight,
+ 15 |   Eye,
+    :   ^|^
+    :    `-- 'Eye' is imported here
+ 16 |   Table
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Table' is imported but never used.
+    ,-[src/components/NorthEastFocus.jsx:16:3]
+ 15 |   Eye,
+ 16 |   Table
+    :   ^^|^^
+    :     `-- 'Table' is imported here
+ 17 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Cpu' is imported but never used.
+    ,-[src/components/CUFSimulator.jsx:13:3]
+ 12 | import { 
+ 13 |   Cpu, 
+    :   ^|^
+    :    `-- 'Cpu' is imported here
+ 14 |   Sliders, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Sliders' is imported but never used.
+    ,-[src/components/CUFSimulator.jsx:14:3]
+ 13 |   Cpu, 
+ 14 |   Sliders, 
+    :   ^^^|^^^
+    :      `-- 'Sliders' is imported here
+ 15 |   Sparkles, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Sparkles' is imported but never used.
+    ,-[src/components/CUFSimulator.jsx:15:3]
+ 14 |   Sliders, 
+ 15 |   Sparkles, 
+    :   ^^^^|^^^
+    :       `-- 'Sparkles' is imported here
+ 16 |   TrendingUp, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'TrendingUp' is imported but never used.
+    ,-[src/components/CUFSimulator.jsx:16:3]
+ 15 |   Sparkles, 
+ 16 |   TrendingUp, 
+    :   ^^^^^|^^^^
+    :        `-- 'TrendingUp' is imported here
+ 17 |   Clock, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Clock' is imported but never used.
+    ,-[src/components/CUFSimulator.jsx:17:3]
+ 16 |   TrendingUp, 
+ 17 |   Clock, 
+    :   ^^|^^
+    :     `-- 'Clock' is imported here
+ 18 |   ShieldCheck, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ShieldCheck' is imported but never used.
+    ,-[src/components/CUFSimulator.jsx:18:3]
+ 17 |   Clock, 
+ 18 |   ShieldCheck, 
+    :   ^^^^^|^^^^^
+    :        `-- 'ShieldCheck' is imported here
+ 19 |   AlertTriangle, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AlertTriangle' is imported but never used.
+    ,-[src/components/CUFSimulator.jsx:19:3]
+ 18 |   ShieldCheck, 
+ 19 |   AlertTriangle, 
+    :   ^^^^^^|^^^^^^
+    :         `-- 'AlertTriangle' is imported here
+ 20 |   Layers, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Layers' is imported but never used.
+    ,-[src/components/CUFSimulator.jsx:20:3]
+ 19 |   AlertTriangle, 
+ 20 |   Layers, 
+    :   ^^^|^^
+    :      `-- 'Layers' is imported here
+ 21 |   RefreshCw,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'RefreshCw' is imported but never used.
+    ,-[src/components/CUFSimulator.jsx:21:3]
+ 20 |   Layers, 
+ 21 |   RefreshCw,
+    :   ^^^^|^^^^
+    :       `-- 'RefreshCw' is imported here
+ 22 |   PlusCircle,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'PlusCircle' is imported but never used.
+    ,-[src/components/CUFSimulator.jsx:22:3]
+ 21 |   RefreshCw,
+ 22 |   PlusCircle,
+    :   ^^^^^|^^^^
+    :        `-- 'PlusCircle' is imported here
+ 23 |   FileCheck,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'FileCheck' is imported but never used.
+    ,-[src/components/CUFSimulator.jsx:23:3]
+ 22 |   PlusCircle,
+ 23 |   FileCheck,
+    :   ^^^^|^^^^
+    :       `-- 'FileCheck' is imported here
+ 24 |   Building
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Building' is imported but never used.
+    ,-[src/components/CUFSimulator.jsx:24:3]
+ 23 |   FileCheck,
+ 24 |   Building
+    :   ^^^^|^^^
+    :       `-- 'Building' is imported here
+ 25 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Variable 'handleCufChange' is declared but never used. Unused variables should start with a '_'.
+    ,-[src/components/CUFSimulator.jsx:76:9]
+ 75 | 
+ 76 |   const handleCufChange = (field, value) => {
+    :         ^^^^^^^|^^^^^^^
+    :                `-- 'handleCufChange' is declared here
+ 77 |     setFormData(prev => ({
+    `----
+  help: Consider removing this declaration.
+
+  ! eslint(no-unused-vars): Identifier 'Building' is imported but never used.
+   ,-[src/components/ProjectDetailModal.jsx:5:3]
+ 4 |   X, 
+ 5 |   Building, 
+   :   ^^^^|^^^
+   :       `-- 'Building' is imported here
+ 6 |   Calendar, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Calendar' is imported but never used.
+   ,-[src/components/ProjectDetailModal.jsx:6:3]
+ 5 |   Building, 
+ 6 |   Calendar, 
+   :   ^^^^|^^^
+   :       `-- 'Calendar' is imported here
+ 7 |   MapPin, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'MapPin' is imported but never used.
+   ,-[src/components/ProjectDetailModal.jsx:7:3]
+ 6 |   Calendar, 
+ 7 |   MapPin, 
+   :   ^^^|^^
+   :      `-- 'MapPin' is imported here
+ 8 |   TrendingUp, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'TrendingUp' is imported but never used.
+   ,-[src/components/ProjectDetailModal.jsx:8:3]
+ 7 |   MapPin, 
+ 8 |   TrendingUp, 
+   :   ^^^^^|^^^^
+   :        `-- 'TrendingUp' is imported here
+ 9 |   AlertTriangle, 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AlertTriangle' is imported but never used.
+    ,-[src/components/ProjectDetailModal.jsx:9:3]
+  8 |   TrendingUp, 
+  9 |   AlertTriangle, 
+    :   ^^^^^^|^^^^^^
+    :         `-- 'AlertTriangle' is imported here
+ 10 |   Clock, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ShieldAlert' is imported but never used.
+    ,-[src/components/ProjectDetailModal.jsx:12:3]
+ 11 |   CheckCircle2, 
+ 12 |   ShieldAlert, 
+    :   ^^^^^|^^^^^
+    :        `-- 'ShieldAlert' is imported here
+ 13 |   Lightbulb, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Lightbulb' is imported but never used.
+    ,-[src/components/ProjectDetailModal.jsx:13:3]
+ 12 |   ShieldAlert, 
+ 13 |   Lightbulb, 
+    :   ^^^^|^^^^
+    :       `-- 'Lightbulb' is imported here
+ 14 |   FileText, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'FileText' is imported but never used.
+    ,-[src/components/ProjectDetailModal.jsx:14:3]
+ 13 |   Lightbulb, 
+ 14 |   FileText, 
+    :   ^^^^|^^^
+    :       `-- 'FileText' is imported here
+ 15 |   Printer, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ArrowRight' is imported but never used.
+    ,-[src/components/ProjectDetailModal.jsx:16:3]
+ 15 |   Printer, 
+ 16 |   ArrowRight,
+    :   ^^^^^|^^^^
+    :        `-- 'ArrowRight' is imported here
+ 17 |   Layers,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Layers' is imported but never used.
+    ,-[src/components/ProjectDetailModal.jsx:17:3]
+ 16 |   ArrowRight,
+ 17 |   Layers,
+    :   ^^^|^^
+    :      `-- 'Layers' is imported here
+ 18 |   Sparkles,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Sparkles' is imported but never used.
+    ,-[src/components/ProjectDetailModal.jsx:18:3]
+ 17 |   Layers,
+ 18 |   Sparkles,
+    :   ^^^^|^^^
+    :       `-- 'Sparkles' is imported here
+ 19 |   DollarSign,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'DollarSign' is imported but never used.
+    ,-[src/components/ProjectDetailModal.jsx:19:3]
+ 18 |   Sparkles,
+ 19 |   DollarSign,
+    :   ^^^^^|^^^^
+    :        `-- 'DollarSign' is imported here
+ 20 |   Briefcase
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Briefcase' is imported but never used.
+    ,-[src/components/ProjectDetailModal.jsx:20:3]
+ 19 |   DollarSign,
+ 20 |   Briefcase
+    :   ^^^^|^^^^
+    :       `-- 'Briefcase' is imported here
+ 21 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Variable 'costPred' is declared but never used. Unused variables should start with a '_'.
+    ,-[src/components/ProjectDetailModal.jsx:27:9]
+ 26 |   const risk = calculateRiskScore(project);
+ 27 |   const costPred = predictCostOverrun(project);
+    :         ^^^^|^^^
+    :             `-- 'costPred' is declared here
+ 28 |   const timePred = predictTimeOverrun(project);
+    `----
+  help: Consider removing this declaration.
+
+  x react-hooks(rules-of-hooks): React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render.
+    ,-[src/components/ProjectDetailModal.jsx:29:37]
+ 28 |   const timePred = predictTimeOverrun(project);
+ 29 |   const [activeTab, setActiveTab] = useState('scurve'); // 'scurve', 'milestones', 'drivers'
+    :                                     ^^^^^^^^^|^^^^^^^^
+    :                                              `-- This Hook call is not reachable on every render path.
+ 30 | 
+    `----
+  help: Move the Hook call before the condition, or call it unconditionally and branch inside the Hook/effect instead.
+
+  ! eslint(no-unused-vars): Identifier 'STATES_SUMMARY' is imported but never used.
+   ,-[src/components/CitizenPortal.jsx:4:3]
+ 3 |   PAIMANA_SUMMARY, 
+ 4 |   STATES_SUMMARY, 
+   :   ^^^^^^^|^^^^^^
+   :          `-- 'STATES_SUMMARY' is imported here
+ 5 |   DETAILED_PROJECTS 
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AlertTriangle' is imported but never used.
+    ,-[src/components/CitizenPortal.jsx:13:3]
+ 12 |   CheckCircle2, 
+ 13 |   AlertTriangle, 
+    :   ^^^^^^|^^^^^^
+    :         `-- 'AlertTriangle' is imported here
+ 14 |   Clock, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Clock' is imported but never used.
+    ,-[src/components/CitizenPortal.jsx:14:3]
+ 13 |   AlertTriangle, 
+ 14 |   Clock, 
+    :   ^^|^^
+    :     `-- 'Clock' is imported here
+ 15 |   DollarSign, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'DollarSign' is imported but never used.
+    ,-[src/components/CitizenPortal.jsx:15:3]
+ 14 |   Clock, 
+ 15 |   DollarSign, 
+    :   ^^^^^|^^^^
+    :        `-- 'DollarSign' is imported here
+ 16 |   Layers, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Layers' is imported but never used.
+    ,-[src/components/CitizenPortal.jsx:16:3]
+ 15 |   DollarSign, 
+ 16 |   Layers, 
+    :   ^^^|^^
+    :      `-- 'Layers' is imported here
+ 17 |   Camera, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'FileText' is imported but never used.
+    ,-[src/components/CitizenPortal.jsx:19:3]
+ 18 |   Send, 
+ 19 |   FileText, 
+    :   ^^^^|^^^
+    :       `-- 'FileText' is imported here
+ 20 |   ShieldCheck, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ExternalLink' is imported but never used.
+    ,-[src/components/CitizenPortal.jsx:21:3]
+ 20 |   ShieldCheck, 
+ 21 |   ExternalLink,
+    :   ^^^^^^|^^^^^
+    :         `-- 'ExternalLink' is imported here
+ 22 |   ChevronRight,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Filter' is imported but never used.
+    ,-[src/components/CitizenPortal.jsx:23:3]
+ 22 |   ChevronRight,
+ 23 |   Filter,
+    :   ^^^|^^
+    :      `-- 'Filter' is imported here
+ 24 |   Sparkles
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Sparkles' is imported but never used.
+    ,-[src/components/CitizenPortal.jsx:24:3]
+ 23 |   Filter,
+ 24 |   Sparkles
+    :   ^^^^|^^^
+    :       `-- 'Sparkles' is imported here
+ 25 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Variable 'setSelectedState' is declared but never used. Unused variables should start with a '_'.
+    ,-[src/components/CitizenPortal.jsx:37:25]
+ 36 |   const [selectedSector, setSelectedSector] = useState('All');
+ 37 |   const [selectedState, setSelectedState] = useState('All');
+    :                         ^^^^^^^^|^^^^^^^
+    :                                 `-- 'setSelectedState' is declared here
+ 38 |   const [selectedStatus, setSelectedStatus] = useState('All');
+    `----
+  help: Consider removing this declaration.
+
+  ! eslint(no-unused-vars): Identifier 'NORTH_EAST_SUMMARY' is imported but never used.
+   ,-[src/components/NationalInfrastructureMap.jsx:5:3]
+ 4 |   DETAILED_PROJECTS, 
+ 5 |   NORTH_EAST_SUMMARY 
+   :   ^^^^^^^^^|^^^^^^^^
+   :            `-- 'NORTH_EAST_SUMMARY' is imported here
+ 6 | } from '../data/paimanaData';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Building' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:9:3]
+  8 |   MapPin, 
+  9 |   Building, 
+    :   ^^^^|^^^
+    :       `-- 'Building' is imported here
+ 10 |   TrendingUp, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'TrendingUp' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:10:3]
+  9 |   Building, 
+ 10 |   TrendingUp, 
+    :   ^^^^^|^^^^
+    :        `-- 'TrendingUp' is imported here
+ 11 |   AlertTriangle, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AlertTriangle' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:11:3]
+ 10 |   TrendingUp, 
+ 11 |   AlertTriangle, 
+    :   ^^^^^^|^^^^^^
+    :         `-- 'AlertTriangle' is imported here
+ 12 |   Layers, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Search' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:13:3]
+ 12 |   Layers, 
+ 13 |   Search, 
+    :   ^^^|^^
+    :      `-- 'Search' is imported here
+ 14 |   Filter, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Filter' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:14:3]
+ 13 |   Search, 
+ 14 |   Filter, 
+    :   ^^^|^^
+    :      `-- 'Filter' is imported here
+ 15 |   Eye, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Eye' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:15:3]
+ 14 |   Filter, 
+ 15 |   Eye, 
+    :   ^|^
+    :    `-- 'Eye' is imported here
+ 16 |   Globe, 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Globe' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:16:3]
+ 15 |   Eye, 
+ 16 |   Globe, 
+    :   ^^|^^
+    :     `-- 'Globe' is imported here
+ 17 |   Compass,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ArrowRight' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:18:3]
+ 17 |   Compass,
+ 18 |   ArrowRight,
+    :   ^^^^^|^^^^
+    :        `-- 'ArrowRight' is imported here
+ 19 |   ShieldAlert,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ShieldAlert' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:19:3]
+ 18 |   ArrowRight,
+ 19 |   ShieldAlert,
+    :   ^^^^^|^^^^^
+    :        `-- 'ShieldAlert' is imported here
+ 20 |   Info,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Info' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:20:3]
+ 19 |   ShieldAlert,
+ 20 |   Info,
+    :   ^^|^
+    :     `-- 'Info' is imported here
+ 21 |   ZoomIn,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Sparkles' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:24:3]
+ 23 |   RotateCcw,
+ 24 |   Sparkles,
+    :   ^^^^|^^^
+    :       `-- 'Sparkles' is imported here
+ 25 |   CheckCircle2,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'CheckCircle2' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:25:3]
+ 24 |   Sparkles,
+ 25 |   CheckCircle2,
+    :   ^^^^^^|^^^^^
+    :         `-- 'CheckCircle2' is imported here
+ 26 |   Table
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Table' is imported but never used.
+    ,-[src/components/NationalInfrastructureMap.jsx:26:3]
+ 25 |   CheckCircle2,
+ 26 |   Table
+    :   ^^|^^
+    :     `-- 'Table' is imported here
+ 27 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Variable 'maxProjectCount' is declared but never used. Unused variables should start with a '_'.
+     ,-[src/components/NationalInfrastructureMap.jsx:394:9]
+ 393 |   // Max bounds for color scaling
+ 394 |   const maxProjectCount = 213; // Maharashtra
+     :         ^^^^^^^|^^^^^^^
+     :                `-- 'maxProjectCount' is declared here
+ 395 |   const maxOutlayCr = 5.43; // ₹5.43 Lakh Cr
+     `----
+  help: Consider removing this declaration.
+
+  ! eslint(no-unused-vars): Variable 'maxOutlayCr' is declared but never used. Unused variables should start with a '_'.
+     ,-[src/components/NationalInfrastructureMap.jsx:395:9]
+ 394 |   const maxProjectCount = 213; // Maharashtra
+ 395 |   const maxOutlayCr = 5.43; // ₹5.43 Lakh Cr
+     :         ^^^^^|^^^^^
+     :              `-- 'maxOutlayCr' is declared here
+ 396 | 
+     `----
+  help: Consider removing this declaration.
+
+  ! react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+    ,-[src/components/NationalInfrastructureMap.jsx:30:14]
+ 29 | // Official Detailed SVG Geometries for all Indian States & Union Territories (Projection ViewBox: 0 0 800 880)
+ 30 | export const INDIA_STATES_SVG = [
+    :              ^^^^^^^^^^^^^^^^
+ 31 |   // 1. Ladakh
+    `----
+
+  ! react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+     ,-[src/components/NationalInfrastructureMap.jsx:322:14]
+ 321 | // Strategic High-Impact Multi-State Economic Corridors
+ 322 | export const STRATEGIC_CORRIDORS_DATA = [
+     :              ^^^^^^^^^^^^^^^^^^^^^^^^
+ 323 |   {
+     `----
+
+  ! eslint(no-unused-vars): Identifier 'HardHat' is imported but never used.
+   ,-[src/components/CompanyBidderPortal.jsx:4:3]
+ 3 | import { 
+ 4 |   HardHat, 
+   :   ^^^|^^^
+   :      `-- 'HardHat' is imported here
+ 5 |   Building2, 
+   `----
+  help: Consider removing this import.
+
+  ! react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders
+    ,-[src/components/CompanyBidderPortal.jsx:41:5]
+ 39 | 
+ 40 |   useEffect(() => {
+    :   ^^^^|^^^^
+    :       `-- This is the containing effect
+ 41 |     fetchAgencyInterventions();
+    :     ^^^^^^^^^^^^|^^^^^^^^^^^
+    :                 `-- Avoid calling setState() directly within an effect
+ 42 |   }, []);
+    `----
+  help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+  note: React Compiler skipped optimizing this component or hook. Additional guidance: https://react.dev/reference/eslint-plugin-react-hooks/lints/set-state-in-effect
+
+  ! eslint(no-unused-vars): Identifier 'Filter' is imported but never used.
+    ,-[src/components/TendersBiddingPlatform.jsx:22:3]
+ 21 |   Download,
+ 22 |   Filter,
+    :   ^^^|^^
+    :      `-- 'Filter' is imported here
+ 23 |   ArrowRight,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ArrowRight' is imported but never used.
+    ,-[src/components/TendersBiddingPlatform.jsx:23:3]
+ 22 |   Filter,
+ 23 |   ArrowRight,
+    :   ^^^^^|^^^^
+    :        `-- 'ArrowRight' is imported here
+ 24 |   TrendingUp,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'TrendingUp' is imported but never used.
+    ,-[src/components/TendersBiddingPlatform.jsx:24:3]
+ 23 |   ArrowRight,
+ 24 |   TrendingUp,
+    :   ^^^^^|^^^^
+    :        `-- 'TrendingUp' is imported here
+ 25 |   Building2,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Building2' is imported but never used.
+    ,-[src/components/TendersBiddingPlatform.jsx:25:3]
+ 24 |   TrendingUp,
+ 25 |   Building2,
+    :   ^^^^|^^^^
+    :       `-- 'Building2' is imported here
+ 26 |   IndianRupee,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'IndianRupee' is imported but never used.
+    ,-[src/components/TendersBiddingPlatform.jsx:26:3]
+ 25 |   Building2,
+ 26 |   IndianRupee,
+    :   ^^^^^|^^^^^
+    :        `-- 'IndianRupee' is imported here
+ 27 |   MapPin,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'MapPin' is imported but never used.
+    ,-[src/components/TendersBiddingPlatform.jsx:27:3]
+ 26 |   IndianRupee,
+ 27 |   MapPin,
+    :   ^^^|^^
+    :      `-- 'MapPin' is imported here
+ 28 |   HelpCircle,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'HelpCircle' is imported but never used.
+    ,-[src/components/TendersBiddingPlatform.jsx:28:3]
+ 27 |   MapPin,
+ 28 |   HelpCircle,
+    :   ^^^^^|^^^^
+    :        `-- 'HelpCircle' is imported here
+ 29 |   Layers,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Layers' is imported but never used.
+    ,-[src/components/TendersBiddingPlatform.jsx:29:3]
+ 28 |   HelpCircle,
+ 29 |   Layers,
+    :   ^^^|^^
+    :      `-- 'Layers' is imported here
+ 30 |   ChevronRight,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'ChevronRight' is imported but never used.
+    ,-[src/components/TendersBiddingPlatform.jsx:30:3]
+ 29 |   Layers,
+ 30 |   ChevronRight,
+    :   ^^^^^^|^^^^^
+    :         `-- 'ChevronRight' is imported here
+ 31 |   AlertCircle,
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AlertCircle' is imported but never used.
+    ,-[src/components/TendersBiddingPlatform.jsx:31:3]
+ 30 |   ChevronRight,
+ 31 |   AlertCircle,
+    :   ^^^^^|^^^^^
+    :        `-- 'AlertCircle' is imported here
+ 32 |   FileCheck
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'FileCheck' is imported but never used.
+    ,-[src/components/TendersBiddingPlatform.jsx:32:3]
+ 31 |   AlertCircle,
+ 32 |   FileCheck
+    :   ^^^^|^^^^
+    :       `-- 'FileCheck' is imported here
+ 33 | } from 'lucide-react';
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Variable 'formStep' is declared but never used. Unused variables should start with a '_'.
+     ,-[src/components/TendersBiddingPlatform.jsx:454:10]
+ 453 | function BidSubmissionModal({ tender, onClose }) {
+ 454 |   const [formStep, setFormStep] = useState(1);
+     :          ^^^^|^^^
+     :              `-- 'formStep' is declared here
+ 455 |   const [isSubmitted, setIsSubmitted] = useState(false);
+     `----
+  help: Consider removing this declaration.
+
+  ! eslint(no-unused-vars): Variable 'setFormStep' is declared but never used. Unused variables should start with a '_'.
+     ,-[src/components/TendersBiddingPlatform.jsx:454:20]
+ 453 | function BidSubmissionModal({ tender, onClose }) {
+ 454 |   const [formStep, setFormStep] = useState(1);
+     :                    ^^^^^|^^^^^
+     :                         `-- 'setFormStep' is declared here
+ 455 |   const [isSubmitted, setIsSubmitted] = useState(false);
+     `----
+  help: Consider removing this declaration.
+
+Found 182 warnings and 1 error.
+Finished in 15ms on 36 files with 104 rules using 14 threads.

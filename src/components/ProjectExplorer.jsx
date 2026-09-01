@@ -1,10 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
-  DETAILED_PROJECTS, 
   MINISTRIES_DATA, 
   STATES_SUMMARY 
 } from '../data/paimanaData';
-import { calculateRiskScore, predictCostOverrun, predictTimeOverrun } from '../utils/aiEngine';
+import { calculateRiskScore, predictTimeOverrun } from '../utils/aiEngine';
 import { 
   Search, 
   Filter, 
@@ -22,7 +21,7 @@ import {
   Layers
 } from 'lucide-react';
 
-export default function ProjectExplorer({ onSelectProject }) {
+export default function ProjectExplorer({ onSelectProject, isCompanyView = false, isPublicView = false }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMinistry, setSelectedMinistry] = useState('ALL');
   const [selectedState, setSelectedState] = useState('ALL');
@@ -33,18 +32,32 @@ export default function ProjectExplorer({ onSelectProject }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  const [dbProjects, setDbProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/projects')
+      .then(res => res.json())
+      .then(data => {
+        setDbProjects(data);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error("Failed to fetch projects:", err);
+        setIsLoading(false);
+      });
+  }, []);
+
   // Enrich projects with real-time AI calculations
   const allProjects = useMemo(() => {
-    return DETAILED_PROJECTS.map(p => {
+    return dbProjects.map(p => {
       const risk = calculateRiskScore(p);
-      const costPred = predictCostOverrun(p);
       const timePred = predictTimeOverrun(p);
       const overrunPct = p.originalCostCr > 0 ? ((p.revisedCostCr - p.originalCostCr) / p.originalCostCr) * 100 : 0;
 
       return {
         ...p,
         risk,
-        costPred,
         timePred,
         overrunPct
       };
@@ -134,6 +147,11 @@ export default function ProjectExplorer({ onSelectProject }) {
             <span>Export Official CSV</span>
           </button>
         </div>
+        {isLoading && (
+          <div style={{ textAlign: 'center', padding: '1rem', color: '#64748b' }}>
+            Loading projects from backend API...
+          </div>
+        )}
 
         {/* Filter Controls Grid */}
         <div style={{
@@ -309,9 +327,9 @@ export default function ProjectExplorer({ onSelectProject }) {
                 <th>Revised (₹ Cr)</th>
                 <th>Physical %</th>
                 <th>Expenditure (₹ Cr)</th>
-                <th>Target DoC</th>
-                <th>AI Risk</th>
-                <th>Action</th>
+                <th>Status / Schedule</th>
+                {!isPublicView && <th>AI Risk / Score</th>}
+                <th style={{ textAlign: 'right' }}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -379,19 +397,21 @@ export default function ProjectExplorer({ onSelectProject }) {
                       )}
                     </td>
 
-                    <td>
-                      <span className={`gov-badge gov-badge-${risk.riskLevel.toLowerCase()}`}>
-                        {risk.riskLevel} • {risk.score}
-                      </span>
-                    </td>
+                    {!isPublicView && (
+                      <td>
+                        <span className={`gov-badge gov-badge-${risk.riskLevel.toLowerCase()}`}>
+                          {risk.riskLevel} • {risk.score}
+                        </span>
+                      </td>
+                    )}
 
                     <td>
                       <button
-                        onClick={() => onSelectProject(p)}
+                        onClick={() => onSelectProject && onSelectProject(p)}
                         className="gov-btn gov-btn-secondary"
-                        style={{ padding: '2px 8px', fontSize: '0.7rem' }}
+                        style={{ padding: '4px 10px', fontSize: '0.75rem' }}
                       >
-                        Inspect
+                        {isCompanyView ? 'MANAGE PROJECT' : (isPublicView ? 'VIEW PROJECT' : 'INVESTIGATE PROJECT')}
                       </button>
                     </td>
                   </tr>
